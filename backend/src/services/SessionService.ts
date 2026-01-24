@@ -252,6 +252,13 @@ export class SessionService {
     sessionId: string,
     socketId: string
   ): { success: boolean; newModeratorSocketId?: string; sessionDeleted?: boolean; error?: string } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!socketId?.trim()) {
+      return { success: false, error: "Invalid socket ID" };
+    }
+
     const session = this.sessions.get(sessionId);
 
     if (!session) {
@@ -293,6 +300,16 @@ export class SessionService {
     currentModeratorSocketId: string,
     targetSocketId: string
   ): { success: boolean; error?: string } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!currentModeratorSocketId?.trim()) {
+      return { success: false, error: "Invalid moderator socket ID" };
+    }
+    if (!targetSocketId?.trim()) {
+      return { success: false, error: "Invalid target socket ID" };
+    }
+
     const session = this.sessions.get(sessionId);
 
     if (!session) {

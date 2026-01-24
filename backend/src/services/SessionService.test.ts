@@ -506,6 +506,44 @@ describe("SessionService", () => {
       expect(result.sessionDeleted).toBe(true);
       expect(service.getSession(sessionId)).toBeUndefined();
     });
+
+    it("should remove participant's estimate when they leave", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+      service.submitEstimate(sessionId, "socket2", 5);
+
+      const result = service.removeParticipant(sessionId, "socket2");
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.estimates.has("socket2")).toBe(false);
+    });
+
+    it("should fail for empty sessionId", () => {
+      const result = service.removeParticipant("", "socket1");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for whitespace-only sessionId", () => {
+      const result = service.removeParticipant("   ", "socket1");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for empty socketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.removeParticipant(sessionId, "");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid socket ID");
+    });
+
+    it("should fail for whitespace-only socketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.removeParticipant(sessionId, "   ");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid socket ID");
+    });
   });
 
   describe("transferModerator", () => {
@@ -544,6 +582,46 @@ describe("SessionService", () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Target participant not found");
+    });
+
+    it("should fail for empty sessionId", () => {
+      const result = service.transferModerator("", "socket1", "socket2");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for whitespace-only sessionId", () => {
+      const result = service.transferModerator("   ", "socket1", "socket2");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for empty currentModeratorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.transferModerator(sessionId, "", "socket2");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should fail for whitespace-only currentModeratorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.transferModerator(sessionId, "   ", "socket2");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should fail for empty targetSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.transferModerator(sessionId, "socket1", "");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid target socket ID");
+    });
+
+    it("should fail for whitespace-only targetSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.transferModerator(sessionId, "socket1", "   ");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid target socket ID");
     });
   });
 });
