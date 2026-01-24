@@ -1,13 +1,15 @@
+export type EstimateValue = 1 | 2 | 3 | 5 | 8 | 13 | 21 | -1; // -1 represents "?"
+
 export interface Participant {
   socketId: string;
   name: string;
   isModerator: boolean;
   isObserver: boolean;
-  currentEstimate: number | null;
+  currentEstimate: EstimateValue | null;
 }
 
 export interface Round {
-  estimates: Map<string, number>;
+  estimates: Map<string, EstimateValue>;
   revealed: boolean;
 }
 
@@ -19,8 +21,6 @@ export interface Session {
   createdAt: Date;
   lastActivity: Date;
 }
-
-export type EstimateValue = 1 | 2 | 3 | 5 | 8 | 13 | 21 | -1; // -1 represents "?"
 
 export function generateSessionId(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
