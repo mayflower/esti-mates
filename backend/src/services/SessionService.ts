@@ -16,7 +16,10 @@ export class SessionService {
       throw new Error("Invalid moderator name");
     }
 
-    const sessionId = generateSessionId();
+    let sessionId: string;
+    do {
+      sessionId = generateSessionId();
+    } while (this.sessions.has(sessionId));
 
     const moderator: Participant = {
       socketId: moderatorSocketId,
