@@ -280,4 +280,191 @@ describe("SessionService", () => {
       );
     });
   });
+
+  describe("revealCards", () => {
+    it("should reveal all estimates and calculate average", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+      service.joinSession(sessionId, "socket3", "Charlie");
+
+      service.submitEstimate(sessionId, "socket1", 5);
+      service.submitEstimate(sessionId, "socket2", 8);
+      service.submitEstimate(sessionId, "socket3", 13);
+
+      const result = service.revealCards(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+      expect(result.estimates?.size).toBe(3);
+      expect(result.average).toBe((5 + 8 + 13) / 3);
+
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.revealed).toBe(true);
+    });
+
+    it("should exclude ? (-1) from average calculation", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      service.submitEstimate(sessionId, "socket1", 5);
+      service.submitEstimate(sessionId, "socket2", -1); // ? card
+
+      const result = service.revealCards(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+      expect(result.average).toBe(5); // Only 5 counted
+    });
+
+    it("should fail if not moderator", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.revealCards(sessionId, "socket2");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Only moderator can reveal");
+    });
+
+    it("should fail for empty sessionId", () => {
+      const result = service.revealCards("", "socket1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for whitespace-only sessionId", () => {
+      const result = service.revealCards("   ", "socket1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for empty moderatorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.revealCards(sessionId, "");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should fail for whitespace-only moderatorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.revealCards(sessionId, "   ");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should return average of 0 when all estimates are ?", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      service.submitEstimate(sessionId, "socket1", -1);
+      service.submitEstimate(sessionId, "socket2", -1);
+
+      const result = service.revealCards(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+      expect(result.average).toBe(0);
+    });
+  });
+
+  describe("newRound", () => {
+    it("should reset round and clear estimates", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      service.submitEstimate(sessionId, "socket1", 5);
+      service.submitEstimate(sessionId, "socket2", 8);
+      service.revealCards(sessionId, "socket1");
+
+      const result = service.newRound(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.estimates.size).toBe(0);
+      expect(session?.currentRound.revealed).toBe(false);
+
+      // Participant estimates should be reset
+      const alice = session?.participants.get("socket1");
+      expect(alice?.currentEstimate).toBeNull();
+    });
+
+    it("should fail if not moderator", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.newRound(sessionId, "socket2");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Only moderator can start new round");
+    });
+
+    it("should fail for empty sessionId", () => {
+      const result = service.newRound("", "socket1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for whitespace-only sessionId", () => {
+      const result = service.newRound("   ", "socket1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for empty moderatorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.newRound(sessionId, "");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should fail for whitespace-only moderatorSocketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.newRound(sessionId, "   ");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid moderator socket ID");
+    });
+
+    it("should reset all participant estimates", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+      service.joinSession(sessionId, "socket3", "Charlie");
+
+      service.submitEstimate(sessionId, "socket1", 5);
+      service.submitEstimate(sessionId, "socket2", 8);
+      service.submitEstimate(sessionId, "socket3", 13);
+      service.revealCards(sessionId, "socket1");
+
+      const result = service.newRound(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+
+      const session = service.getSession(sessionId);
+      const alice = session?.participants.get("socket1");
+      const bob = session?.participants.get("socket2");
+      const charlie = session?.participants.get("socket3");
+
+      expect(alice?.currentEstimate).toBeNull();
+      expect(bob?.currentEstimate).toBeNull();
+      expect(charlie?.currentEstimate).toBeNull();
+    });
+
+    it("should update lastActivity timestamp", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const session = service.getSession(sessionId);
+      const originalTime = session?.lastActivity;
+
+      const result = service.newRound(sessionId, "socket1");
+
+      const updatedSession = service.getSession(sessionId);
+      expect(updatedSession?.lastActivity.getTime()).toBeGreaterThanOrEqual(
+        originalTime?.getTime() || 0
+      );
+    });
+  });
 });

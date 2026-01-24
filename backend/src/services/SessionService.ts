@@ -140,7 +140,17 @@ export class SessionService {
     return { success: true };
   }
 
-  revealCards(sessionId: string, moderatorSocketId: string): { success: boolean; error?: string } {
+  revealCards(
+    sessionId: string,
+    moderatorSocketId: string
+  ): { success: boolean; error?: string; estimates?: Map<string, EstimateValue>; average?: number } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!moderatorSocketId?.trim()) {
+      return { success: false, error: "Invalid moderator socket ID" };
+    }
+
     const session = this.sessions.get(sessionId);
 
     if (!session) {
@@ -152,6 +162,54 @@ export class SessionService {
     }
 
     session.currentRound.revealed = true;
+    session.lastActivity = new Date();
+
+    // Calculate average (exclude -1 which represents "?")
+    const validEstimates = Array.from(session.currentRound.estimates.values()).filter(
+      (e) => e !== -1
+    );
+
+    const average =
+      validEstimates.length > 0
+        ? validEstimates.reduce((sum, val) => sum + val, 0) / validEstimates.length
+        : 0;
+
+    return {
+      success: true,
+      estimates: session.currentRound.estimates,
+      average,
+    };
+  }
+
+  newRound(sessionId: string, moderatorSocketId: string): { success: boolean; error?: string } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!moderatorSocketId?.trim()) {
+      return { success: false, error: "Invalid moderator socket ID" };
+    }
+
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    if (session.moderatorSocketId !== moderatorSocketId) {
+      return { success: false, error: "Only moderator can start new round" };
+    }
+
+    // Reset round
+    session.currentRound = {
+      estimates: new Map(),
+      revealed: false,
+    };
+
+    // Reset participant estimates
+    for (const participant of session.participants.values()) {
+      participant.currentEstimate = null;
+    }
+
     session.lastActivity = new Date();
 
     return { success: true };
