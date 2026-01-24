@@ -1,0 +1,17 @@
+{
+  "name": "mf-estimates",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "test": "npm run test --workspace=frontend && npm run test --workspace=backend",
+    "lint": "biome check .",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4"
+  }
+}
