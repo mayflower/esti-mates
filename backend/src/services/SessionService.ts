@@ -1,6 +1,6 @@
 // backend/src/services/SessionService.ts
 import type { Participant, Session } from "../types/types";
-import { generateSessionId } from "../types/types";
+import { generateSessionId, deduplicateName } from "../types/types";
 
 export class SessionService {
   private sessions: Map<string, Session> = new Map();
@@ -48,5 +48,47 @@ export class SessionService {
 
   getSession(sessionId: string): Session | undefined {
     return this.sessions.get(sessionId);
+  }
+
+  joinSession(
+    sessionId: string,
+    socketId: string,
+    name: string
+  ):
+    | { success: true; participant: Participant; participants: Participant[] }
+    | { success: false; error: string } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!socketId?.trim()) {
+      return { success: false, error: "Invalid socket ID" };
+    }
+    if (!name?.trim()) {
+      return { success: false, error: "Invalid participant name" };
+    }
+
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    const existingNames = Array.from(session.participants.values()).map((p) => p.name);
+    const uniqueName = deduplicateName(name, existingNames);
+
+    const participant: Participant = {
+      socketId,
+      name: uniqueName,
+      isModerator: false,
+      isObserver: false,
+      currentEstimate: null,
+    };
+
+    session.participants.set(socketId, participant);
+    session.lastActivity = new Date();
+
+    const participants = Array.from(session.participants.values());
+
+    return { success: true, participant, participants };
   }
 }
