@@ -1,0 +1,42 @@
+// backend/src/services/SessionService.ts
+import type { Session, Participant } from "../types/types";
+import { generateSessionId } from "../types/types";
+
+export class SessionService {
+  private sessions: Map<string, Session> = new Map();
+
+  createSession(
+    moderatorSocketId: string,
+    moderatorName: string
+  ): { sessionId: string; moderator: Participant } {
+    const sessionId = generateSessionId();
+
+    const moderator: Participant = {
+      socketId: moderatorSocketId,
+      name: moderatorName,
+      isModerator: true,
+      isObserver: false,
+      currentEstimate: null,
+    };
+
+    const session: Session = {
+      id: sessionId,
+      moderatorSocketId,
+      participants: new Map([[moderatorSocketId, moderator]]),
+      currentRound: {
+        estimates: new Map(),
+        revealed: false,
+      },
+      createdAt: new Date(),
+      lastActivity: new Date(),
+    };
+
+    this.sessions.set(sessionId, session);
+
+    return { sessionId, moderator };
+  }
+
+  getSession(sessionId: string): Session | undefined {
+    return this.sessions.get(sessionId);
+  }
+}
