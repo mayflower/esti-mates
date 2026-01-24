@@ -1,6 +1,6 @@
 // backend/src/services/SessionService.ts
-import type { Participant, Session, EstimateValue } from "../types/types";
-import { generateSessionId, deduplicateName } from "../types/types";
+import type { EstimateValue, Participant, Session } from "../types/types";
+import { deduplicateName, generateSessionId } from "../types/types";
 
 export class SessionService {
   private sessions: Map<string, Session> = new Map();
@@ -143,7 +143,12 @@ export class SessionService {
   revealCards(
     sessionId: string,
     moderatorSocketId: string
-  ): { success: boolean; error?: string; estimates?: Map<string, EstimateValue>; average?: number } {
+  ): {
+    success: boolean;
+    error?: string;
+    estimates?: Map<string, EstimateValue>;
+    average?: number;
+  } {
     if (!sessionId?.trim()) {
       return { success: false, error: "Invalid session ID" };
     }
@@ -238,6 +243,86 @@ export class SessionService {
     }
 
     participant.isObserver = !participant.isObserver;
+    session.lastActivity = new Date();
+
+    return { success: true };
+  }
+
+  removeParticipant(
+    sessionId: string,
+    socketId: string
+  ): { success: boolean; newModeratorSocketId?: string; sessionDeleted?: boolean; error?: string } {
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    // Remove participant
+    session.participants.delete(socketId);
+
+    // Remove their estimate
+    session.currentRound.estimates.delete(socketId);
+
+    // If no participants left, delete the session
+    if (session.participants.size === 0) {
+      this.sessions.delete(sessionId);
+      return { success: true, sessionDeleted: true };
+    }
+
+    // If moderator left, transfer to oldest remaining participant
+    if (session.moderatorSocketId === socketId) {
+      const newModeratorSocketId = session.participants.keys().next().value;
+      session.moderatorSocketId = newModeratorSocketId;
+
+      const newModerator = session.participants.get(newModeratorSocketId);
+      if (newModerator) {
+        newModerator.isModerator = true;
+      }
+
+      session.lastActivity = new Date();
+      return { success: true, newModeratorSocketId };
+    }
+
+    session.lastActivity = new Date();
+    return { success: true };
+  }
+
+  transferModerator(
+    sessionId: string,
+    currentModeratorSocketId: string,
+    targetSocketId: string
+  ): { success: boolean; error?: string } {
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    // Verify current requester is moderator
+    if (session.moderatorSocketId !== currentModeratorSocketId) {
+      return { success: false, error: "Only moderator can transfer role" };
+    }
+
+    // Verify target participant exists
+    const targetParticipant = session.participants.get(targetSocketId);
+    if (!targetParticipant) {
+      return { success: false, error: "Target participant not found" };
+    }
+
+    // Remove isModerator from current moderator
+    const currentModerator = session.participants.get(currentModeratorSocketId);
+    if (currentModerator) {
+      currentModerator.isModerator = false;
+    }
+
+    // Set isModerator on target
+    targetParticipant.isModerator = true;
+
+    // Update session moderator
+    session.moderatorSocketId = targetSocketId;
+
+    // Update lastActivity
     session.lastActivity = new Date();
 
     return { success: true };

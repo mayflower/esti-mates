@@ -467,4 +467,83 @@ describe("SessionService", () => {
       );
     });
   });
+
+  describe("removeParticipant", () => {
+    it("should remove participant from session", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.removeParticipant(sessionId, "socket2");
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      expect(session?.participants.size).toBe(1);
+      expect(session?.participants.has("socket2")).toBe(false);
+    });
+
+    it("should transfer moderator if moderator leaves", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.removeParticipant(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+      expect(result.newModeratorSocketId).toBe("socket2");
+
+      const session = service.getSession(sessionId);
+      expect(session?.moderatorSocketId).toBe("socket2");
+
+      const bob = session?.participants.get("socket2");
+      expect(bob?.isModerator).toBe(true);
+    });
+
+    it("should delete session if last participant leaves", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+
+      const result = service.removeParticipant(sessionId, "socket1");
+
+      expect(result.success).toBe(true);
+      expect(result.sessionDeleted).toBe(true);
+      expect(service.getSession(sessionId)).toBeUndefined();
+    });
+  });
+
+  describe("transferModerator", () => {
+    it("should transfer moderator role to target participant", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.transferModerator(sessionId, "socket1", "socket2");
+
+      expect(result.success).toBe(true);
+
+      const session = service.getSession(sessionId);
+      expect(session?.moderatorSocketId).toBe("socket2");
+
+      const alice = session?.participants.get("socket1");
+      const bob = session?.participants.get("socket2");
+
+      expect(alice?.isModerator).toBe(false);
+      expect(bob?.isModerator).toBe(true);
+    });
+
+    it("should fail if requester is not moderator", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.transferModerator(sessionId, "socket2", "socket1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Only moderator can transfer role");
+    });
+
+    it("should fail if target does not exist", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+
+      const result = service.transferModerator(sessionId, "socket1", "unknownSocket");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Target participant not found");
+    });
+  });
 });
