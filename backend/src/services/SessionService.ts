@@ -1,5 +1,5 @@
 // backend/src/services/SessionService.ts
-import type { Participant, Session } from "../types/types";
+import type { Participant, Session, EstimateValue } from "../types/types";
 import { generateSessionId, deduplicateName } from "../types/types";
 
 export class SessionService {
@@ -94,5 +94,89 @@ export class SessionService {
     const participants = Array.from(session.participants.values());
 
     return { success: true, participant, participants };
+  }
+
+  submitEstimate(
+    sessionId: string,
+    socketId: string,
+    estimate: EstimateValue
+  ): { success: boolean; error?: string } {
+    if (!sessionId?.trim()) {
+      return { success: false, error: "Invalid session ID" };
+    }
+    if (!socketId?.trim()) {
+      return { success: false, error: "Invalid socket ID" };
+    }
+
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    const participant = session.participants.get(socketId);
+
+    if (!participant) {
+      return { success: false, error: "Participant not found" };
+    }
+
+    if (participant.isObserver) {
+      return { success: false, error: "Observers cannot estimate" };
+    }
+
+    if (session.currentRound.revealed) {
+      return { success: false, error: "Round already revealed" };
+    }
+
+    session.currentRound.estimates.set(socketId, estimate);
+    participant.currentEstimate = estimate;
+    session.lastActivity = new Date();
+
+    return { success: true };
+  }
+
+  revealCards(sessionId: string, moderatorSocketId: string): { success: boolean; error?: string } {
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    if (session.moderatorSocketId !== moderatorSocketId) {
+      return { success: false, error: "Only moderator can reveal" };
+    }
+
+    session.currentRound.revealed = true;
+    session.lastActivity = new Date();
+
+    return { success: true };
+  }
+
+  toggleObserver(
+    sessionId: string,
+    requesterSocketId: string,
+    targetSocketId: string
+  ): { success: boolean; error?: string } {
+    const session = this.sessions.get(sessionId);
+
+    if (!session) {
+      return { success: false, error: "Session not found" };
+    }
+
+    const participant = session.participants.get(targetSocketId);
+
+    if (!participant) {
+      return { success: false, error: "Participant not found" };
+    }
+
+    // Only moderator or self can toggle
+    if (requesterSocketId !== session.moderatorSocketId && requesterSocketId !== targetSocketId) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    participant.isObserver = !participant.isObserver;
+    session.lastActivity = new Date();
+
+    return { success: true };
   }
 }

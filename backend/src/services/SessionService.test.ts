@@ -149,4 +149,127 @@ describe("SessionService", () => {
       expect(result.error).toBe("Invalid participant name");
     });
   });
+
+  describe("submitEstimate", () => {
+    it("should store participant estimate", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+
+      const result = service.submitEstimate(sessionId, "socket2", 5);
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.estimates.get("socket2")).toBe(5);
+    });
+
+    it("should fail if session not found", () => {
+      const result = service.submitEstimate("INVALID", "socket1", 3);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Session not found");
+    });
+
+    it("should fail if participant not in session", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "unknownSocket", 8);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Participant not found");
+    });
+
+    it("should fail if round already revealed", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.submitEstimate(sessionId, "socket1", 3);
+      service.revealCards(sessionId, "socket1");
+
+      const result = service.submitEstimate(sessionId, "socket1", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Round already revealed");
+    });
+
+    it("should fail if participant is observer", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.joinSession(sessionId, "socket2", "Bob");
+      service.toggleObserver(sessionId, "socket1", "socket2");
+
+      const result = service.submitEstimate(sessionId, "socket2", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Observers cannot estimate");
+    });
+
+    it("should fail for empty sessionId", () => {
+      const result = service.submitEstimate("", "socket1", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for whitespace-only sessionId", () => {
+      const result = service.submitEstimate("   ", "socket1", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid session ID");
+    });
+
+    it("should fail for empty socketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid socket ID");
+    });
+
+    it("should fail for whitespace-only socketId", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "   ", 5);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid socket ID");
+    });
+
+    it("should update participant.currentEstimate", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "socket1", 8);
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      const participant = session?.participants.get("socket1");
+      expect(participant?.currentEstimate).toBe(8);
+    });
+
+    it("should allow question mark estimate (-1)", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "socket1", -1);
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.estimates.get("socket1")).toBe(-1);
+    });
+
+    it("should allow updating an existing estimate", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      service.submitEstimate(sessionId, "socket1", 3);
+      const result = service.submitEstimate(sessionId, "socket1", 8);
+
+      expect(result.success).toBe(true);
+      const session = service.getSession(sessionId);
+      expect(session?.currentRound.estimates.get("socket1")).toBe(8);
+      expect(session?.participants.get("socket1")?.currentEstimate).toBe(8);
+    });
+
+    it("should update lastActivity timestamp", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const session = service.getSession(sessionId);
+      const originalTime = session?.lastActivity;
+
+      const result = service.submitEstimate(sessionId, "socket1", 5);
+
+      const updatedSession = service.getSession(sessionId);
+      expect(updatedSession?.lastActivity.getTime()).toBeGreaterThanOrEqual(
+        originalTime?.getTime() || 0
+      );
+    });
+  });
 });
