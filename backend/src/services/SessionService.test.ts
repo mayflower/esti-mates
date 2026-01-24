@@ -1,5 +1,5 @@
 // backend/src/services/SessionService.test.ts
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { SessionService } from "./SessionService";
 
 describe("SessionService", () => {
@@ -34,6 +34,24 @@ describe("SessionService", () => {
 
       expect(session?.currentRound.estimates.size).toBe(0);
       expect(session?.currentRound.revealed).toBe(false);
+    });
+
+    it("should throw error for empty moderator socket ID", () => {
+      expect(() => service.createSession("", "Alice")).toThrow("Invalid moderator socket ID");
+    });
+
+    it("should throw error for whitespace-only moderator socket ID", () => {
+      expect(() => service.createSession("   ", "Alice")).toThrow(
+        "Invalid moderator socket ID"
+      );
+    });
+
+    it("should throw error for empty moderator name", () => {
+      expect(() => service.createSession("socket1", "")).toThrow("Invalid moderator name");
+    });
+
+    it("should throw error for whitespace-only moderator name", () => {
+      expect(() => service.createSession("socket1", "   ")).toThrow("Invalid moderator name");
     });
   });
 });

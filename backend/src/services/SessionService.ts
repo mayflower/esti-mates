@@ -1,5 +1,5 @@
 // backend/src/services/SessionService.ts
-import type { Session, Participant } from "../types/types";
+import type { Participant, Session } from "../types/types";
 import { generateSessionId } from "../types/types";
 
 export class SessionService {
@@ -9,6 +9,13 @@ export class SessionService {
     moderatorSocketId: string,
     moderatorName: string
   ): { sessionId: string; moderator: Participant } {
+    if (!moderatorSocketId?.trim()) {
+      throw new Error("Invalid moderator socket ID");
+    }
+    if (!moderatorName?.trim()) {
+      throw new Error("Invalid moderator name");
+    }
+
     const sessionId = generateSessionId();
 
     const moderator: Participant = {
