@@ -108,6 +108,11 @@ export class SessionService {
       return { success: false, error: "Invalid socket ID" };
     }
 
+    const validEstimates: EstimateValue[] = [1, 2, 3, 5, 8, 13, 21, -1];
+    if (!validEstimates.includes(estimate)) {
+      return { success: false, error: "Invalid estimate value" };
+    }
+
     const session = this.sessions.get(sessionId);
 
     if (!session) {

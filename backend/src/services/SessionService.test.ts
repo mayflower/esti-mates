@@ -229,6 +229,14 @@ describe("SessionService", () => {
       expect(result.error).toBe("Invalid socket ID");
     });
 
+    it("should fail for invalid estimate value", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.submitEstimate(sessionId, "socket1", 4 as any);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid estimate value");
+    });
+
     it("should update participant.currentEstimate", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       const result = service.submitEstimate(sessionId, "socket1", 8);
