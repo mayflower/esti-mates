@@ -73,6 +73,10 @@ export class SessionService {
       return { success: false, error: "Session not found" };
     }
 
+    if (session.participants.has(socketId)) {
+      return { success: false, error: "Socket ID already in session" };
+    }
+
     const existingNames = Array.from(session.participants.values()).map((p) => p.name);
     const uniqueName = deduplicateName(name, existingNames);
 

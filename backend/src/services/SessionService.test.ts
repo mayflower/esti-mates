@@ -81,6 +81,14 @@ describe("SessionService", () => {
       expect(result.participant?.name).toBe("Tom (2)");
     });
 
+    it("should fail if socketId already exists in session", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+      const result = service.joinSession(sessionId, "socket1", "Bob");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Socket ID already in session");
+    });
+
     it("should update lastActivity timestamp", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       const session = service.getSession(sessionId);
