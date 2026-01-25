@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { generateSessionId, deduplicateName } from "./types";
+import { describe, expect, it } from "vitest";
+import { deduplicateName, generateSessionId } from "./types";
 
 describe("generateSessionId", () => {
   it("should generate a 6 character alphanumeric string", () => {

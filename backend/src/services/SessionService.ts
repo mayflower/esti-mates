@@ -279,7 +279,7 @@ export class SessionService {
 
     // If moderator left, transfer to oldest remaining participant
     if (session.moderatorSocketId === socketId) {
-      const newModeratorSocketId = session.participants.keys().next().value;
+      const newModeratorSocketId = session.participants.keys().next().value as string;
       session.moderatorSocketId = newModeratorSocketId;
 
       const newModerator = session.participants.get(newModeratorSocketId);
@@ -343,5 +343,17 @@ export class SessionService {
     session.lastActivity = new Date();
 
     return { success: true };
+  }
+
+  getStats(): { activeSessions: number; connectedUsers: number } {
+    let totalUsers = 0;
+    for (const session of this.sessions.values()) {
+      totalUsers += session.participants.size;
+    }
+
+    return {
+      activeSessions: this.sessions.size,
+      connectedUsers: totalUsers,
+    };
   }
 }
