@@ -1,8 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { IntlProvider } from "react-intl";
 import { ThemeProvider } from "styled-components";
 import { ParticipantList } from "./ParticipantList";
 import type { EstimateValue, Participant } from "../types/types";
+import messages from "../i18n/messages/en.json";
 
 const theme = {
   brandName: "Test Brand",
@@ -55,9 +57,11 @@ function renderParticipantList(props: Partial<Parameters<typeof ParticipantList>
 
   return {
     ...render(
-      <ThemeProvider theme={theme}>
-        <ParticipantList {...defaultProps} />
-      </ThemeProvider>
+      <IntlProvider messages={messages} locale="en" defaultLocale="en">
+        <ThemeProvider theme={theme}>
+          <ParticipantList {...defaultProps} />
+        </ThemeProvider>
+      </IntlProvider>
     ),
     props: defaultProps,
   };

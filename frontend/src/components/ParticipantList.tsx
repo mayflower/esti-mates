@@ -1,5 +1,6 @@
 // frontend/src/components/ParticipantList.tsx
 import type React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 import type { EstimateValue, Participant } from "../types/types";
 import { getEstimateLabel } from "../types/types";
@@ -87,26 +88,6 @@ interface Props {
   onTransferModerator: (targetSocketId: string) => void;
 }
 
-function getStatusAriaLabel(
-  participant: Participant,
-  revealed: boolean,
-  revealedEstimates: Record<string, EstimateValue> | null
-): string {
-  if (participant.isObserver) {
-    return "Observer";
-  }
-  if (revealed && revealedEstimates) {
-    const estimate = revealedEstimates[participant.socketId];
-    if (estimate !== undefined && estimate !== null) {
-      return `Voted: ${getEstimateLabel(estimate)}`;
-    }
-  }
-  if (participant.currentEstimate !== null) {
-    return "Voted";
-  }
-  return "Waiting for vote";
-}
-
 export function ParticipantList({
   participants,
   revealed,
@@ -116,6 +97,31 @@ export function ParticipantList({
   onToggleObserver,
   onTransferModerator,
 }: Props) {
+  const intl = useIntl();
+
+  const getStatusAriaLabel = (
+    participant: Participant,
+    revealed: boolean,
+    revealedEstimates: Record<string, EstimateValue> | null
+  ): string => {
+    if (participant.isObserver) {
+      return intl.formatMessage({ id: "participants.statusObserver" });
+    }
+    if (revealed && revealedEstimates) {
+      const estimate = revealedEstimates[participant.socketId];
+      if (estimate !== undefined && estimate !== null) {
+        return intl.formatMessage(
+          { id: "participants.statusVotedValue" },
+          { value: getEstimateLabel(estimate) }
+        );
+      }
+    }
+    if (participant.currentEstimate !== null) {
+      return intl.formatMessage({ id: "participants.statusVoted" });
+    }
+    return intl.formatMessage({ id: "participants.statusWaiting" });
+  };
+
   const getStatus = (participant: Participant): React.ReactNode => {
     if (participant.isObserver) {
       return <StatusIndicator $status="waiting">👁️</StatusIndicator>;
@@ -138,8 +144,10 @@ export function ParticipantList({
   };
 
   return (
-    <Container role="region" aria-label="Session participants">
-      <Title>Participants ({participants.length})</Title>
+    <Container role="region" aria-label={intl.formatMessage({ id: "participants.regionLabel" })}>
+      <Title>
+        <FormattedMessage id="participants.title" values={{ count: participants.length }} />
+      </Title>
 
       {participants.map((participant) => {
         const isCurrentUser = participant.socketId === currentSocketId;
@@ -150,13 +158,19 @@ export function ParticipantList({
             <Name>
               {participant.name}
               {participant.isModerator && (
-                <Badge $type="moderator" aria-label="Session moderator">
+                <Badge
+                  $type="moderator"
+                  aria-label={intl.formatMessage({ id: "participants.moderatorLabel" })}
+                >
                   👑
                 </Badge>
               )}
               {participant.isObserver && (
-                <Badge $type="observer" aria-label="Observer (not voting)">
-                  Observer
+                <Badge
+                  $type="observer"
+                  aria-label={intl.formatMessage({ id: "participants.observerLabel" })}
+                >
+                  <FormattedMessage id="participants.observer" />
                 </Badge>
               )}
             </Name>
@@ -165,14 +179,18 @@ export function ParticipantList({
                 <>
                   <ActionButton
                     onClick={() => onToggleObserver(participant.socketId)}
-                    title={participant.isObserver ? "Make Participant" : "Make Observer"}
+                    title={
+                      participant.isObserver
+                        ? intl.formatMessage({ id: "participants.makeParticipant" })
+                        : intl.formatMessage({ id: "participants.makeObserver" })
+                    }
                   >
                     {participant.isObserver ? "👤" : "👁️"}
                   </ActionButton>
                   {!participant.isModerator && (
                     <ActionButton
                       onClick={() => onTransferModerator(participant.socketId)}
-                      title="Transfer Moderator Role"
+                      title={intl.formatMessage({ id: "participants.transferModerator" })}
                     >
                       👑
                     </ActionButton>
