@@ -70,6 +70,14 @@ const Button = styled.button`
   }
 `;
 
+const SectionTitle = styled.h2`
+  color: ${(props) => props.theme.colors.text};
+  margin-bottom: ${(props) => props.theme.spacing.md};
+  font-size: 1.25rem;
+  text-align: center;
+  font-weight: 600;
+`;
+
 const Divider = styled.div`
   display: flex;
   align-items: center;
@@ -104,56 +112,63 @@ export interface LandingPageProps {
 }
 
 export function LandingPage({ onCreateSession }: LandingPageProps) {
-  const [name, setName] = useState("");
-  const [sessionId, setSessionId] = useState("");
+  const [createName, setCreateName] = useState("");
+  const [joinSessionId, setJoinSessionId] = useState("");
   const navigate = useNavigate();
   const branding = useBranding();
 
   const handleCreate = () => {
-    if (!name.trim()) {
+    if (!createName.trim()) {
       alert("Please enter your name");
       return;
     }
-    onCreateSession(name.trim());
+    onCreateSession(createName.trim());
   };
 
   const handleJoin = () => {
-    if (!sessionId.trim()) {
+    if (!joinSessionId.trim()) {
       alert("Please enter a session ID");
       return;
     }
-    if (!name.trim()) {
-      alert("Please enter your name");
-      return;
-    }
-    navigate(`/session/${sessionId.trim().toUpperCase()}`);
+    // No name validation here!
+    navigate(`/session/${joinSessionId.trim().toUpperCase()}`);
   };
 
   return (
     <Container>
       {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
       <Title>MF EstiMates</Title>
+
+      {/* Form 1: Create New Session */}
       <Card>
+        <SectionTitle>Create New Session</SectionTitle>
         <Input
           type="text"
           placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={createName}
+          onChange={(e) => setCreateName(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleCreate()}
           maxLength={50}
         />
         <Button onClick={handleCreate}>Create New Session</Button>
+      </Card>
 
-        <Divider>or</Divider>
+      <Divider>or</Divider>
 
+      {/* Form 2: Join Existing Session */}
+      <Card>
+        <SectionTitle>Join Existing Session</SectionTitle>
         <Input
           type="text"
           placeholder="Session ID (6 characters)"
-          value={sessionId}
-          onChange={(e) => setSessionId(e.target.value)}
+          value={joinSessionId}
+          onChange={(e) => setJoinSessionId(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleJoin()}
           maxLength={6}
         />
         <Button onClick={handleJoin}>Join Existing Session</Button>
       </Card>
+
       <Footer>{branding.brandFooterText}</Footer>
     </Container>
   );
