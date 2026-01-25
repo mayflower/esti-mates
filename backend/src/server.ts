@@ -48,7 +48,20 @@ io.on("connection", (socket) => {
 
   socket.on("create_session", (payload) => {
     logger.info(`create_session from ${socket.id}`, { name: payload.name });
-    eventHandlers.handleCreateSession(socket, payload);
+
+    if (!payload.name || payload.name.trim() === "") {
+      socket.emit("error", { message: "Name is required" });
+      return;
+    }
+
+    const result = sessionService.createSession(socket.id, payload.name.trim());
+    currentSessionId = result.sessionId;
+
+    socket.join(result.sessionId);
+    socket.emit("session_created", {
+      sessionId: result.sessionId,
+      moderator: result.moderator,
+    });
   });
 
   socket.on("join_session", (payload) => {
@@ -56,8 +69,30 @@ io.on("connection", (socket) => {
       sessionId: payload.sessionId,
       name: payload.name,
     });
+
+    if (!payload.name || payload.name.trim() === "") {
+      socket.emit("error", { message: "Name is required" });
+      return;
+    }
+
+    const result = sessionService.joinSession(payload.sessionId, socket.id, payload.name.trim());
+
+    if (!result.success) {
+      socket.emit("error", { message: result.error });
+      return;
+    }
+
     currentSessionId = payload.sessionId;
-    eventHandlers.handleJoinSession(socket, payload);
+    socket.join(payload.sessionId);
+
+    socket.emit("joined_session", {
+      participants: result.participants,
+      isModerator: result.participant?.isModerator,
+    });
+
+    socket.to(payload.sessionId).emit("participant_joined", {
+      participant: result.participant,
+    });
   });
 
   socket.on("submit_estimate", (payload) => {
