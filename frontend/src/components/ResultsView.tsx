@@ -8,9 +8,8 @@ const Container = styled.div`
   border-radius: ${(props) => props.theme.borderRadius.lg};
   box-shadow: ${(props) => props.theme.shadows.md};
   padding: ${(props) => props.theme.spacing.xl};
-  margin: ${(props) => props.theme.spacing.lg};
   max-width: 800px;
-  margin: 0 auto;
+  margin: ${(props) => props.theme.spacing.lg} auto 0;
 `;
 
 const Title = styled.h2`
@@ -60,6 +59,21 @@ interface Props {
 }
 
 export function ResultsView({ estimates, average }: Props) {
+  // Validate average
+  const displayAverage = Number.isFinite(average) ? average.toFixed(1) : "N/A";
+
+  // Handle empty estimates
+  if (Object.keys(estimates).length === 0) {
+    return (
+      <Container role="region" aria-label="Voting results">
+        <Title>Results</Title>
+        <Average role="status" aria-label="No votes yet">
+          No votes yet
+        </Average>
+      </Container>
+    );
+  }
+
   // Group estimates by value
   const groupedEstimates = Object.values(estimates).reduce(
     (acc, value) => {
@@ -78,9 +92,11 @@ export function ResultsView({ estimates, average }: Props) {
   });
 
   return (
-    <Container>
+    <Container role="region" aria-label="Voting results">
       <Title>Results</Title>
-      <Average>{average.toFixed(1)}</Average>
+      <Average role="status" aria-label={`Average estimate: ${displayAverage} story points`}>
+        {displayAverage}
+      </Average>
 
       <EstimatesGrid>
         {sortedGroups.map(([value, count]) => (
