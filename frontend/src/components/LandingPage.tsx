@@ -2,16 +2,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useBranding } from "../contexts/BrandingContext";
 import { useNotification } from "../contexts/NotificationContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   background: ${(props) => props.theme.colors.background};
+`;
+
+const LanguageSwitcherWrapper = styled.div`
+  position: absolute;
+  top: ${(props) => props.theme.spacing.md};
+  right: ${(props) => props.theme.spacing.md};
 `;
 
 const Logo = styled.img`
@@ -118,10 +127,11 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
   const navigate = useNavigate();
   const branding = useBranding();
   const { dialog } = useNotification();
+  const intl = useIntl();
 
   const handleCreate = () => {
     if (!createName.trim()) {
-      dialog.error("Please enter your name");
+      dialog.error(intl.formatMessage({ id: "landing.nameRequired" }));
       return;
     }
     onCreateSession(createName.trim());
@@ -129,7 +139,7 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
 
   const handleJoin = () => {
     if (!joinSessionId.trim()) {
-      dialog.error("Please enter a session ID");
+      dialog.error(intl.formatMessage({ id: "landing.sessionIdRequired" }));
       return;
     }
     // No name validation here!
@@ -138,37 +148,40 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
 
   return (
     <Container>
+      <LanguageSwitcherWrapper>
+        <LanguageSwitcher />
+      </LanguageSwitcherWrapper>
       {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
-      <Title>MF EstiMates</Title>
+      <Title><FormattedMessage id="landing.title" /></Title>
 
       {/* Form 1: Create New Session */}
       <Card>
-        <SectionTitle>Create New Session</SectionTitle>
+        <SectionTitle><FormattedMessage id="landing.createSession" /></SectionTitle>
         <Input
           type="text"
-          placeholder="Your name"
+          placeholder={intl.formatMessage({ id: "landing.yourName" })}
           value={createName}
           onChange={(e) => setCreateName(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleCreate()}
           maxLength={50}
         />
-        <Button onClick={handleCreate}>Create New Session</Button>
+        <Button onClick={handleCreate}><FormattedMessage id="landing.createButton" /></Button>
       </Card>
 
-      <Divider>or</Divider>
+      <Divider><FormattedMessage id="landing.or" /></Divider>
 
       {/* Form 2: Join Existing Session */}
       <Card>
-        <SectionTitle>Join Existing Session</SectionTitle>
+        <SectionTitle><FormattedMessage id="landing.joinSession" /></SectionTitle>
         <Input
           type="text"
-          placeholder="Session ID (6 characters)"
+          placeholder={intl.formatMessage({ id: "landing.sessionIdPlaceholder" })}
           value={joinSessionId}
           onChange={(e) => setJoinSessionId(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleJoin()}
           maxLength={6}
         />
-        <Button onClick={handleJoin}>Join Existing Session</Button>
+        <Button onClick={handleJoin}><FormattedMessage id="landing.joinButton" /></Button>
       </Card>
 
       <Footer>{branding.brandFooterText}</Footer>
