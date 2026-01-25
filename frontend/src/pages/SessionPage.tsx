@@ -102,6 +102,24 @@ const Button = styled.button`
   }
 `;
 
+const ObserverToggleButton = styled.button<{ $isObserver: boolean }>`
+  background: ${(props) => (props.$isObserver ? props.theme.colors.warning : props.theme.colors.surface)};
+  color: ${(props) => (props.$isObserver ? "white" : props.theme.colors.text)};
+  border: 1px solid ${(props) => (props.$isObserver ? props.theme.colors.warning : props.theme.colors.border)};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.spacing.xs};
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
 export function SessionPage() {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>();
   const location = useLocation();
@@ -120,6 +138,8 @@ export function SessionPage() {
     submitEstimate,
     revealCards,
     newRound,
+    toggleObserver,
+    transferModerator,
   } = useSession();
 
   const [name, setName] = useState("");
@@ -166,6 +186,10 @@ export function SessionPage() {
     }
   };
 
+  const handleToggleObserver = () => {
+    toggleObserver(); // No targetSocketId = toggle self
+  };
+
   const currentParticipant = participants.find((p) => p.socketId === currentSocketId);
   const isObserver = currentParticipant?.isObserver || false;
   const hasEstimates = participants.some((p) => p.currentEstimate !== null);
@@ -195,6 +219,10 @@ export function SessionPage() {
         participants={participants}
         revealed={roundRevealed}
         revealedEstimates={revealedEstimates as Record<string, EstimateValue> | null}
+        currentSocketId={currentSocketId}
+        isModerator={isModerator}
+        onToggleObserver={toggleObserver}
+        onTransferModerator={transferModerator}
       />
 
       <MainArea>
@@ -204,6 +232,13 @@ export function SessionPage() {
             <SessionId onClick={handleCopySessionId} title="Click to copy">
               {sessionId}
             </SessionId>
+            <ObserverToggleButton
+              $isObserver={isObserver}
+              onClick={handleToggleObserver}
+              title={isObserver ? "Switch to Participant mode" : "Switch to Observer mode"}
+            >
+              👁️ {isObserver ? "Observer Mode" : "Participant Mode"}
+            </ObserverToggleButton>
           </SessionInfo>
         </Header>
 

@@ -81,12 +81,34 @@ describe("SessionService", () => {
       expect(result.participant?.name).toBe("Tom (2)");
     });
 
-    it("should fail if socketId already exists in session", () => {
+    it("should replace stale participant if socketId already exists in session", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
+
+      // Socket1 is already in session as Alice (moderator)
+      // Now Bob tries to join with the same socket ID (e.g., hot-reload or reconnect)
       const result = service.joinSession(sessionId, "socket1", "Bob");
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe("Socket ID already in session");
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.replacedStaleParticipant).toBe(true);
+        expect(result.participant.name).toBe("Bob");
+        expect(result.participants.length).toBe(1); // Still only one participant
+        expect(result.participants[0].name).toBe("Bob"); // Name updated to Bob
+      }
+    });
+
+    it("should preserve moderator status when replacing stale moderator", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+
+      // Moderator (Alice with socket1) reloads page - same socket ID rejoins
+      const result = service.joinSession(sessionId, "socket1", "Alice");
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.replacedStaleParticipant).toBe(true);
+        expect(result.participant.isModerator).toBe(true); // Moderator status preserved
+        expect(result.participants[0].isModerator).toBe(true);
+      }
     });
 
     it("should update lastActivity timestamp", () => {

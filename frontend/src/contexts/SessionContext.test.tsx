@@ -27,5 +27,51 @@ describe("SessionContext", () => {
     expect(result.current.isModerator).toBe(false);
   });
 
-  // More tests would require proper socket mocking
+  it("should have toggleObserver function", () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+    );
+
+    const { result } = renderHook(() => useSession(), { wrapper });
+
+    expect(typeof result.current.toggleObserver).toBe("function");
+  });
+
+  it("should have transferModerator function", () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+    );
+
+    const { result } = renderHook(() => useSession(), { wrapper });
+
+    expect(typeof result.current.transferModerator).toBe("function");
+  });
+
+  it("should emit toggle_observer event when toggleObserver is called", () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+    );
+
+    const { result } = renderHook(() => useSession(), { wrapper });
+
+    result.current.toggleObserver("socket123");
+
+    expect(mockSocket.emit).toHaveBeenCalledWith("toggle_observer", {
+      targetSocketId: "socket123",
+    });
+  });
+
+  it("should emit transfer_moderator event when transferModerator is called", () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+    );
+
+    const { result } = renderHook(() => useSession(), { wrapper });
+
+    result.current.transferModerator("socket123");
+
+    expect(mockSocket.emit).toHaveBeenCalledWith("transfer_moderator", {
+      targetSocketId: "socket123",
+    });
+  });
 });

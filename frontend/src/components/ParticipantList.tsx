@@ -57,10 +57,34 @@ const StatusIndicator = styled.div<{ $status: "waiting" | "estimated" | "reveale
   ${(props) => props.$status === "revealed" && "font-weight: 700;"}
 `;
 
+const Actions = styled.div`
+  display: flex;
+  gap: ${(props) => props.theme.spacing.xs};
+  align-items: center;
+`;
+
+const ActionButton = styled.button`
+  background: transparent;
+  border: 1px solid ${(props) => props.theme.colors.border};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
+  padding: ${(props) => props.theme.spacing.xs};
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: ${(props) => props.theme.colors.text};
+
+  &:hover {
+    background: ${(props) => props.theme.colors.border};
+  }
+`;
+
 interface Props {
   participants: Participant[];
   revealed: boolean;
   revealedEstimates: Record<string, EstimateValue> | null;
+  currentSocketId: string | null;
+  isModerator: boolean;
+  onToggleObserver: (targetSocketId?: string) => void;
+  onTransferModerator: (targetSocketId: string) => void;
 }
 
 function getStatusAriaLabel(
@@ -73,7 +97,7 @@ function getStatusAriaLabel(
   }
   if (revealed && revealedEstimates) {
     const estimate = revealedEstimates[participant.socketId];
-    if (estimate !== undefined) {
+    if (estimate !== undefined && estimate !== null) {
       return `Voted: ${getEstimateLabel(estimate)}`;
     }
   }
@@ -83,7 +107,15 @@ function getStatusAriaLabel(
   return "Waiting for vote";
 }
 
-export function ParticipantList({ participants, revealed, revealedEstimates }: Props) {
+export function ParticipantList({
+  participants,
+  revealed,
+  revealedEstimates,
+  currentSocketId,
+  isModerator,
+  onToggleObserver,
+  onTransferModerator,
+}: Props) {
   const getStatus = (participant: Participant): React.ReactNode => {
     if (participant.isObserver) {
       return <StatusIndicator $status="waiting">👁️</StatusIndicator>;
@@ -109,26 +141,51 @@ export function ParticipantList({ participants, revealed, revealedEstimates }: P
     <Container role="region" aria-label="Session participants">
       <Title>Participants ({participants.length})</Title>
 
-      {participants.map((participant) => (
-        <ParticipantItem key={participant.socketId}>
-          <Name>
-            {participant.name}
-            {participant.isModerator && (
-              <Badge $type="moderator" aria-label="Session moderator">
-                👑
-              </Badge>
-            )}
-            {participant.isObserver && (
-              <Badge $type="observer" aria-label="Observer (not voting)">
-                Observer
-              </Badge>
-            )}
-          </Name>
-          <span aria-label={getStatusAriaLabel(participant, revealed, revealedEstimates)}>
-            {getStatus(participant)}
-          </span>
-        </ParticipantItem>
-      ))}
+      {participants.map((participant) => {
+        const isCurrentUser = participant.socketId === currentSocketId;
+        const canManageParticipant = isModerator && !isCurrentUser;
+
+        return (
+          <ParticipantItem key={participant.socketId}>
+            <Name>
+              {participant.name}
+              {participant.isModerator && (
+                <Badge $type="moderator" aria-label="Session moderator">
+                  👑
+                </Badge>
+              )}
+              {participant.isObserver && (
+                <Badge $type="observer" aria-label="Observer (not voting)">
+                  Observer
+                </Badge>
+              )}
+            </Name>
+            <Actions>
+              {canManageParticipant && (
+                <>
+                  <ActionButton
+                    onClick={() => onToggleObserver(participant.socketId)}
+                    title={participant.isObserver ? "Make Participant" : "Make Observer"}
+                  >
+                    {participant.isObserver ? "👤" : "👁️"}
+                  </ActionButton>
+                  {!participant.isModerator && (
+                    <ActionButton
+                      onClick={() => onTransferModerator(participant.socketId)}
+                      title="Transfer Moderator Role"
+                    >
+                      👑
+                    </ActionButton>
+                  )}
+                </>
+              )}
+              <span aria-label={getStatusAriaLabel(participant, revealed, revealedEstimates)}>
+                {getStatus(participant)}
+              </span>
+            </Actions>
+          </ParticipantItem>
+        );
+      })}
     </Container>
   );
 }

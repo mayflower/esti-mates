@@ -55,7 +55,7 @@ export class SessionService {
     socketId: string,
     name: string
   ):
-    | { success: true; participant: Participant; participants: Participant[] }
+    | { success: true; participant: Participant; participants: Participant[]; replacedStaleParticipant?: boolean }
     | { success: false; error: string } {
     if (!sessionId?.trim()) {
       return { success: false, error: "Invalid session ID" };
@@ -73,17 +73,24 @@ export class SessionService {
       return { success: false, error: "Session not found" };
     }
 
+    // If socket ID already exists, remove stale participant (e.g., from hot-reload, reconnect, or page refresh)
+    let replacedStaleParticipant = false;
     if (session.participants.has(socketId)) {
-      return { success: false, error: "Socket ID already in session" };
+      session.participants.delete(socketId);
+      session.currentRound.estimates.delete(socketId);
+      replacedStaleParticipant = true;
     }
 
     const existingNames = Array.from(session.participants.values()).map((p) => p.name);
     const uniqueName = deduplicateName(name, existingNames);
 
+    // Preserve moderator status if this socket is the session moderator
+    const isModerator = session.moderatorSocketId === socketId;
+
     const participant: Participant = {
       socketId,
       name: uniqueName,
-      isModerator: false,
+      isModerator,
       isObserver: false,
       currentEstimate: null,
     };
@@ -93,7 +100,7 @@ export class SessionService {
 
     const participants = Array.from(session.participants.values());
 
-    return { success: true, participant, participants };
+    return { success: true, participant, participants, replacedStaleParticipant };
   }
 
   submitEstimate(
