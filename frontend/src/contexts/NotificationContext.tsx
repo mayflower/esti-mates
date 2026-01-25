@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useMemo, useCallback, useEffect, useRef, ReactNode } from 'react';
+import { ToastContainer } from '../components/ToastContainer';
+import { DialogContainer } from '../components/DialogContainer';
 
 // Types
 export type ToastType = 'success' | 'error' | 'info';
@@ -132,6 +134,8 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   return (
     <NotificationContext.Provider value={value}>
       {children}
+      <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
+      <DialogContainer dialog={currentDialog} onClose={closeDialog} />
     </NotificationContext.Provider>
   );
 }

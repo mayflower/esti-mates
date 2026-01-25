@@ -1,6 +1,18 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { ThemeProvider } from 'styled-components';
+import { createTheme } from '../styles/theme';
 import { NotificationProvider, useNotification } from './NotificationContext';
+
+const theme = createTheme('#1a73e8');
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider theme={theme}>
+      <NotificationProvider>{children}</NotificationProvider>
+    </ThemeProvider>
+  );
+}
 
 describe('NotificationContext', () => {
   it('should throw error when useNotification is used outside provider', () => {
@@ -11,7 +23,7 @@ describe('NotificationContext', () => {
 
   it('should provide toast and dialog functions', () => {
     const { result } = renderHook(() => useNotification(), {
-      wrapper: NotificationProvider,
+      wrapper: Wrapper,
     });
 
     expect(result.current.toast).toBeDefined();
@@ -25,7 +37,7 @@ describe('NotificationContext', () => {
 
   it('should add toast and respect max 5 limit', () => {
     const { result } = renderHook(() => useNotification(), {
-      wrapper: NotificationProvider,
+      wrapper: Wrapper,
     });
 
     act(() => {
@@ -39,7 +51,7 @@ describe('NotificationContext', () => {
 
   it('should add dialog and replace previous', () => {
     const { result } = renderHook(() => useNotification(), {
-      wrapper: NotificationProvider,
+      wrapper: Wrapper,
     });
 
     act(() => {

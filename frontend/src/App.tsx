@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
 import { BrandingProvider } from "./contexts/BrandingContext";
+import { NotificationProvider } from "./contexts/NotificationContext";
 import { SessionProvider } from "./contexts/SessionContext";
 import { useSession } from "./contexts/SessionContext";
 import { useSocket } from "./hooks/useSocket";
@@ -59,11 +60,13 @@ export function App() {
 
   return (
     <BrandingProvider>
-      <SessionProvider socket={socket}>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </SessionProvider>
+      <NotificationProvider>
+        <SessionProvider socket={socket}>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </SessionProvider>
+      </NotificationProvider>
     </BrandingProvider>
   );
 }
