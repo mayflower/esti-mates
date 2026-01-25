@@ -1,8 +1,10 @@
 // frontend/src/pages/SessionPage.tsx
 import { useEffect, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { EstimationCards } from "../components/EstimationCards";
+import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { ModeratorControls } from "../components/ModeratorControls";
 import { ParticipantList } from "../components/ParticipantList";
 import { ResultsView } from "../components/ResultsView";
@@ -128,6 +130,7 @@ export function SessionPage() {
   const { name: nameFromState } = (location.state as { name?: string }) || {};
   const branding = useBranding();
   const { toast, dialog } = useNotification();
+  const intl = useIntl();
   const {
     sessionId,
     participants,
@@ -163,11 +166,11 @@ export function SessionPage() {
 
   const handleJoin = () => {
     if (!name.trim()) {
-      dialog.error("Please enter your name");
+      dialog.error(intl.formatMessage({ id: "session.nameRequired" }));
       return;
     }
     if (!urlSessionId) {
-      dialog.error("Invalid session ID", {
+      dialog.error(intl.formatMessage({ id: "session.invalidSessionId" }), {
         onClose: () => navigate('/'),
       });
       return;
@@ -184,10 +187,10 @@ export function SessionPage() {
 
     try {
       await navigator.clipboard.writeText(sessionId);
-      toast.success("Session ID copied to clipboard!");
+      toast.success(intl.formatMessage({ id: "session.sessionIdCopied" }));
     } catch (error) {
       console.error("Failed to copy:", error);
-      dialog.error(`Failed to copy. Session ID: ${sessionId}`);
+      dialog.error(intl.formatMessage({ id: "session.copyFailed" }, { sessionId }));
     }
   };
 
@@ -203,16 +206,16 @@ export function SessionPage() {
     return (
       <Container>
         <JoinPrompt>
-          <h2>Join Session</h2>
+          <h2><FormattedMessage id="session.joinTitle" /></h2>
           <Input
             type="text"
-            placeholder="Enter your name"
+            placeholder={intl.formatMessage({ id: "session.enterName" })}
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleJoin()}
             maxLength={50}
           />
-          <Button onClick={handleJoin}>Join</Button>
+          <Button onClick={handleJoin}><FormattedMessage id="session.joinButton" /></Button>
         </JoinPrompt>
       </Container>
     );
@@ -234,15 +237,20 @@ export function SessionPage() {
         <Header>
           {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
           <SessionInfo>
-            <SessionId onClick={handleCopySessionId} title="Click to copy">
+            <LanguageSwitcher />
+            <SessionId onClick={handleCopySessionId} title={intl.formatMessage({ id: "session.clickToCopy" })}>
               {sessionId}
             </SessionId>
             <ObserverToggleButton
               $isObserver={isObserver}
               onClick={handleToggleObserver}
-              title={isObserver ? "Switch to Participant mode" : "Switch to Observer mode"}
+              title={isObserver
+                ? intl.formatMessage({ id: "session.switchToParticipant" })
+                : intl.formatMessage({ id: "session.switchToObserver" })}
             >
-              👁️ {isObserver ? "Observer Mode" : "Participant Mode"}
+              {isObserver
+                ? <><span>👁️ </span><FormattedMessage id="session.observerMode" /></>
+                : <><span>👁️ </span><FormattedMessage id="session.participantMode" /></>}
             </ObserverToggleButton>
           </SessionInfo>
         </Header>
