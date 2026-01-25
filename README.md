@@ -29,7 +29,7 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 - **Express** 4.22.1 - Web framework
 - **Socket.io** 4.8.1 - Real-time WebSocket server
 - **TypeScript** 5.7.3 - Type safety
-- **Winston** 3.17.0 - Logging
+- **Pino** 10.3.0 - High-performance logging
 - **CORS** 2.8.5 - Cross-origin resource sharing
 
 ### Testing
@@ -39,9 +39,10 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 ### Linting
 - **Biome** 1.9.4 - Linting and formatting
 
-### Deployment
-- **Docker** - Containerization
-- **Kubernetes** - Orchestration support
+### Development & Deployment
+- **Docker** - Multi-stage containerization
+- **Kubernetes** - Orchestration with manifests
+- **Tilt** - Local Kubernetes development with live reload
 
 ## Getting Started
 
@@ -50,6 +51,7 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 - Node.js 20 or higher
 - npm 10 or higher
 - Docker and Docker Compose (optional, for containerized development)
+- Kubernetes (minikube/Docker Desktop) and Tilt (optional, for local Kubernetes development)
 
 ### Installation
 
@@ -63,6 +65,35 @@ npm install
 ```
 
 ## Development Commands
+
+### Kubernetes with Tilt (Recommended)
+
+Run the application in a local Kubernetes cluster with live reload using Tilt:
+
+```bash
+# Start minikube (if not already running)
+minikube start
+
+# Start Tilt
+tilt up
+```
+
+This starts:
+- Frontend at http://localhost:3000
+- Backend WebSocket at http://localhost:3001
+- Automatic rebuild and live reload on file changes
+- Interactive Tilt UI in browser (press 'space' in terminal)
+
+The Tiltfile provides:
+- Multi-stage Docker builds with caching
+- Live updates for backend and frontend code
+- Automatic port forwarding for both HTTP and WebSocket
+- Health checks and logs in the Tilt UI
+
+To stop:
+```bash
+tilt down
+```
 
 ### Docker Compose
 
@@ -167,14 +198,20 @@ mf-estimates/
 │   │   │   ├── session.ts
 │   │   │   └── socket.ts
 │   │   ├── server.ts          # Main server file
-│   │   └── logger.ts          # Winston logger configuration
+│   │   └── logger.ts          # Pino logger configuration
 │   ├── package.json
 │   └── tsconfig.json
 │
 ├── docs/                       # Documentation
 │   └── plans/                 # Implementation plans
 │
+├── k8s/                        # Kubernetes manifests
+│   ├── configmap.yaml         # Environment configuration
+│   ├── deployment.yaml        # Pod deployment spec
+│   └── service.yaml           # Service definition
+│
 ├── Dockerfile                  # Multi-stage Docker build
+├── Tiltfile                    # Tilt configuration for local K8s dev
 ├── docker-compose.yml          # Development setup
 ├── biome.json                  # Biome configuration
 ├── package.json                # Root workspace configuration
