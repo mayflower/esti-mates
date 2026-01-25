@@ -1,4 +1,5 @@
 // frontend/src/components/EstimationCards.tsx
+import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import { ESTIMATE_VALUES, type EstimateValue } from "../types/types";
 import { EstimationCard } from "./EstimationCard";
@@ -33,7 +34,7 @@ export function EstimationCards({
   isObserver,
 }: Props) {
   if (isObserver) {
-    return <Message>You are in observer mode and cannot estimate</Message>;
+    return <Message><FormattedMessage id="estimation.observerMessage" /></Message>;
   }
 
   return (
