@@ -1,6 +1,6 @@
 // frontend/src/pages/SessionPage.tsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useSession } from "../contexts/SessionContext";
 import { ParticipantList } from "../components/ParticipantList";
@@ -104,6 +104,9 @@ const Button = styled.button`
 
 export function SessionPage() {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>();
+  const location = useLocation();
+  const { name: nameFromState } =
+    (location.state as { name?: string }) || {};
   const branding = useBranding();
   const {
     sessionId,
@@ -128,6 +131,13 @@ export function SessionPage() {
       setJoined(true);
     }
   }, [sessionId]);
+
+  useEffect(() => {
+    // Auto-join if name was passed from Landing Page (Create flow)
+    if (nameFromState && urlSessionId && !joined) {
+      joinSession(urlSessionId, nameFromState);
+    }
+  }, [nameFromState, urlSessionId, joined, joinSession]);
 
   const handleJoin = () => {
     if (!name.trim()) {
@@ -161,7 +171,7 @@ export function SessionPage() {
   const isObserver = currentParticipant?.isObserver || false;
   const hasEstimates = participants.some((p) => p.currentEstimate !== null);
 
-  if (!joined) {
+  if (!joined && !nameFromState) {
     return (
       <Container>
         <JoinPrompt>
