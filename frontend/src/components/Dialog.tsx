@@ -1,5 +1,6 @@
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { FiXCircle, FiInfo } from 'react-icons/fi';
+import { FormattedMessage, useIntl } from 'react-intl';
 import styled, { keyframes } from 'styled-components';
 
 interface DialogProps {
@@ -104,8 +105,11 @@ const OkButton = styled.button`
 `;
 
 export function Dialog({ title, message, type = 'info', onClose }: DialogProps) {
+  const intl = useIntl();
   const Icon = iconMap[type];
-  const defaultTitle = type === 'error' ? 'Error' : 'Information';
+  const defaultTitle = type === 'error'
+    ? intl.formatMessage({ id: 'dialog.error' })
+    : intl.formatMessage({ id: 'dialog.info' });
 
   return (
     <RadixDialog.Root open={true} onOpenChange={(open) => !open && onClose()}>
@@ -118,7 +122,7 @@ export function Dialog({ title, message, type = 'info', onClose }: DialogProps) 
             </IconWrapper>
             <Title>{title || defaultTitle}</Title>
             <Description>{message}</Description>
-            <OkButton onClick={onClose}>OK</OkButton>
+            <OkButton onClick={onClose}><FormattedMessage id="dialog.ok" /></OkButton>
           </ContentWrapper>
         </Content>
       </RadixDialog.Portal>
