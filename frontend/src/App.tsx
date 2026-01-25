@@ -10,19 +10,18 @@ import { useSession } from "./contexts/SessionContext";
 
 function LandingPageWrapper() {
   const navigate = useNavigate();
-  const { createSession } = useSession();
+  const { createSession, sessionId } = useSession();
 
   const handleCreateSession = (name: string) => {
     createSession(name);
   };
 
-  // Listen for session creation to navigate
+  // Navigate when session is created
   React.useEffect(() => {
-    const { sessionId } = useSession();
     if (sessionId) {
       navigate(`/session/${sessionId}`);
     }
-  }, [navigate]);
+  }, [sessionId, navigate]);
 
   return <LandingPage onCreateSession={handleCreateSession} />;
 }
