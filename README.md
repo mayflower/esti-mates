@@ -13,7 +13,6 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 - **White-label branding support** - Customize brand name, logo, colors, and footer text via environment variables
 - **Simple session sharing** - Easy-to-remember 6-character session IDs (e.g., ABC123)
 - **4-hour session TTL with automatic cleanup** - Sessions expire automatically to free resources
-- **Standard Fibonacci estimation values** - 0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, ?, ☕
 
 ## Tech Stack
 
@@ -27,7 +26,7 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 
 ### Backend
 - **Node.js** 20 - Runtime environment
-- **Express** 4.21.2 - Web framework
+- **Express** 5.0.1 - Web framework
 - **Socket.io** 4.8.1 - Real-time WebSocket server
 - **TypeScript** 5.7.3 - Type safety
 - **Winston** 3.17.0 - Logging
@@ -262,10 +261,3 @@ All rights reserved. This software is the property of Mayflower GmbH and is prot
 ## Contributing
 
 This is an internal Mayflower project. External contributions are not accepted.
-
-For internal contributors:
-- Follow the coding standards defined in `biome.json`
-- Write tests for new features
-- Update documentation as needed
-- Use conventional commit messages
-- Create feature branches from `main`
