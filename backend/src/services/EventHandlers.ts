@@ -1,4 +1,5 @@
 import type { Server, Socket } from "socket.io";
+import type { EstimateValue } from "../types/types";
 import type { SessionService } from "./SessionService";
 
 export class EventHandlers {
@@ -50,7 +51,11 @@ export class EventHandlers {
     });
   }
 
-  handleSubmitEstimate(socket: Socket, sessionId: string, payload: { estimate: number }): void {
+  handleSubmitEstimate(
+    socket: Socket,
+    sessionId: string,
+    payload: { estimate: EstimateValue }
+  ): void {
     const result = this.sessionService.submitEstimate(sessionId, socket.id, payload.estimate);
 
     if (!result.success) {
