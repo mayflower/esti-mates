@@ -1,6 +1,6 @@
 import type { Server, Socket } from "socket.io";
-import type { EstimateValue } from "../types/types";
-import type { SessionService } from "./SessionService";
+import type { EstimateValue } from "../types/types.js";
+import type { SessionService } from "./SessionService.js";
 
 export class EventHandlers {
   constructor(

@@ -27,7 +27,8 @@ k8s_yaml([
 k8s_resource(
     'mf-estimates',
     port_forwards=[
-        '3000:3001',  # Forward local 3000 to container 3001
+        '3000:3001',  # Forward local 3000 to container 3001 (HTTP)
+        '3001:3001',  # Forward local 3001 to container 3001 (WebSocket)
     ],
     labels=['app'],
 )

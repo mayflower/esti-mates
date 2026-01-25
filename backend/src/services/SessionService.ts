@@ -1,6 +1,6 @@
 // backend/src/services/SessionService.ts
-import type { EstimateValue, Participant, Session } from "../types/types";
-import { deduplicateName, generateSessionId } from "../types/types";
+import type { EstimateValue, Participant, Session } from "../types/types.js";
+import { deduplicateName, generateSessionId } from "../types/types.js";
 
 export class SessionService {
   private sessions: Map<string, Session> = new Map();

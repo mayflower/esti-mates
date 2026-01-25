@@ -3,9 +3,9 @@ import path from "node:path";
 import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
-import { logger } from "./logger";
-import { EventHandlers } from "./services/EventHandlers";
-import { SessionService } from "./services/SessionService";
+import { logger } from "./logger.js";
+import { EventHandlers } from "./services/EventHandlers.js";
+import { SessionService } from "./services/SessionService.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
   let currentSessionId: string | null = null;
 
   socket.on("create_session", (payload) => {
-    logger.info(`create_session from ${socket.id}`, { name: payload.name });
+    logger.info({ name: payload.name }, `create_session from ${socket.id}`);
 
     if (!payload.name || payload.name.trim() === "") {
       socket.emit("error", { message: "Name is required" });
@@ -82,10 +82,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join_session", (payload) => {
-    logger.info(`join_session from ${socket.id}`, {
+    logger.info({
       sessionId: payload.sessionId,
       name: payload.name,
-    });
+    }, `join_session from ${socket.id}`);
 
     if (!payload.name || payload.name.trim() === "") {
       socket.emit("error", { message: "Name is required" });
@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 
   socket.on("submit_estimate", (payload) => {
     if (!currentSessionId) return;
-    logger.info(`submit_estimate from ${socket.id}`, { estimate: payload.estimate });
+    logger.info({ estimate: payload.estimate }, `submit_estimate from ${socket.id}`);
     eventHandlers.handleSubmitEstimate(socket, currentSessionId, payload);
   });
 
@@ -132,17 +132,17 @@ io.on("connection", (socket) => {
 
   socket.on("transfer_moderator", (payload) => {
     if (!currentSessionId) return;
-    logger.info(`transfer_moderator from ${socket.id}`, {
+    logger.info({
       targetSocketId: payload.targetSocketId,
-    });
+    }, `transfer_moderator from ${socket.id}`);
     eventHandlers.handleTransferModerator(socket, currentSessionId, payload);
   });
 
   socket.on("toggle_observer", (payload) => {
     if (!currentSessionId) return;
-    logger.info(`toggle_observer from ${socket.id}`, {
+    logger.info({
       targetSocketId: payload.targetSocketId,
-    });
+    }, `toggle_observer from ${socket.id}`);
     eventHandlers.handleToggleObserver(socket, currentSessionId, payload);
   });
 
