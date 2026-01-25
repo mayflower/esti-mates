@@ -1,7 +1,7 @@
-// frontend/src/components/LandingPage.test.tsx
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+// frontend/src/components/LandingPage.test.tsx
+import { describe, expect, it, vi } from "vitest";
 import { BrandingProvider } from "../contexts/BrandingContext";
 import { LandingPage } from "./LandingPage";
 
