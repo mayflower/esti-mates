@@ -11,17 +11,21 @@ import { useSession } from "./contexts/SessionContext";
 function LandingPageWrapper() {
   const navigate = useNavigate();
   const { createSession, sessionId } = useSession();
+  const [creatorName, setCreatorName] = React.useState<string | null>(null);
 
   const handleCreateSession = (name: string) => {
+    setCreatorName(name);
     createSession(name);
   };
 
-  // Navigate when session is created
+  // Navigate when session is created, passing name via state
   React.useEffect(() => {
-    if (sessionId) {
-      navigate(`/session/${sessionId}`);
+    if (sessionId && creatorName) {
+      navigate(`/session/${sessionId}`, {
+        state: { name: creatorName, isModerator: true },
+      });
     }
-  }, [sessionId, navigate]);
+  }, [sessionId, creatorName, navigate]);
 
   return <LandingPage onCreateSession={handleCreateSession} />;
 }
