@@ -68,7 +68,7 @@ const IconWrapper = styled.div<{ $type: ToastType }>`
 const Message = styled(RadixToast.Description)`
   flex: 1;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: ${p => p.theme.colors.text};
 `;
 
 const CloseButton = styled(RadixToast.Close)`
@@ -79,13 +79,13 @@ const CloseButton = styled(RadixToast.Close)`
   background: transparent;
   cursor: pointer;
   transition: background-color 150ms;
-  &:hover { background-color: #f3f4f6; }
+  &:hover { background-color: ${p => p.theme.colors.background}; }
 `;
 
 const CloseIcon = styled(FiX)`
   width: 16px;
   height: 16px;
-  color: #6b7280;
+  color: ${p => p.theme.colors.textSecondary};
 `;
 
 export function Toast({ id, message, type, onClose }: ToastProps) {
