@@ -190,9 +190,7 @@ export function SessionPage() {
 
       <MainArea>
         <Header>
-          {branding.brandLogoUrl && (
-            <Logo src={branding.brandLogoUrl} alt={branding.brandName} />
-          )}
+          {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
           <SessionInfo>
             <SessionId onClick={handleCopySessionId} title="Click to copy">
               {sessionId}
@@ -211,7 +209,10 @@ export function SessionPage() {
           )}
 
           {roundRevealed && revealedEstimates && average !== null && (
-            <ResultsView estimates={revealedEstimates as Record<string, EstimateValue>} average={average} />
+            <ResultsView
+              estimates={revealedEstimates as Record<string, EstimateValue>}
+              average={average}
+            />
           )}
         </Content>
 

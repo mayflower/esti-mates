@@ -36,7 +36,8 @@ function renderLandingPage(props = {}) {
 describe("LandingPage", () => {
   it("should render create session button", () => {
     renderLandingPage();
-    expect(screen.getByText(/Create New Session/i)).toBeInTheDocument();
+    const element = screen.getByText(/Create New Session/i);
+    expect(element).toBeDefined();
   });
 
   it("should call onCreateSession when button clicked", () => {

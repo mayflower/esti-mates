@@ -1,5 +1,4 @@
 // frontend/src/components/ModeratorControls.tsx
-import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -25,12 +24,9 @@ const Container = styled.div`
 const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
   background: ${(props) =>
     props.$variant === "secondary" ? props.theme.colors.surface : props.theme.colors.primary};
-  color: ${(props) =>
-    props.$variant === "secondary" ? props.theme.colors.text : "white"};
+  color: ${(props) => (props.$variant === "secondary" ? props.theme.colors.text : "white")};
   border: ${(props) =>
-    props.$variant === "secondary"
-      ? `1px solid ${props.theme.colors.border}`
-      : "none"};
+    props.$variant === "secondary" ? `1px solid ${props.theme.colors.border}` : "none"};
   border-radius: ${(props) => props.theme.borderRadius.md};
   padding: ${(props) => props.theme.spacing.md} ${(props) => props.theme.spacing.lg};
   font-size: 1rem;
@@ -72,18 +68,16 @@ export function ModeratorControls({ revealed, hasEstimates, onReveal, onNewRound
         <Button
           onClick={onReveal}
           disabled={!hasEstimates}
-          aria-label={hasEstimates ? "Reveal all participant cards" : "Reveal cards (waiting for estimates)"}
+          aria-label={
+            hasEstimates ? "Reveal all participant cards" : "Reveal cards (waiting for estimates)"
+          }
         >
           Reveal Cards
         </Button>
       )}
 
       {revealed && (
-        <Button
-          onClick={onNewRound}
-          $variant="secondary"
-          aria-label="Start a new estimation round"
-        >
+        <Button onClick={onNewRound} $variant="secondary" aria-label="Start a new estimation round">
           New Round
         </Button>
       )}

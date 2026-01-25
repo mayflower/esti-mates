@@ -345,15 +345,15 @@ export class SessionService {
     return { success: true };
   }
 
-  getStats(): { activeSessions: number; connectedUsers: number } {
+  getStats(): { sessionCount: number; totalParticipants: number } {
     let totalUsers = 0;
     for (const session of this.sessions.values()) {
       totalUsers += session.participants.size;
     }
 
     return {
-      activeSessions: this.sessions.size,
-      connectedUsers: totalUsers,
+      sessionCount: this.sessions.size,
+      totalParticipants: totalUsers,
     };
   }
 

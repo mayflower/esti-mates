@@ -1,5 +1,5 @@
 // frontend/src/components/LandingPage.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useBranding } from "../contexts/BrandingContext";

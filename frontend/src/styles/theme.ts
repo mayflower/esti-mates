@@ -41,8 +41,7 @@ export function createTheme(primaryColor: string): Theme {
     brandName: import.meta.env.VITE_BRAND_NAME || "Mayflower GmbH",
     brandLogoUrl: import.meta.env.VITE_BRAND_LOGO_URL || "/assets/logo.svg",
     brandPrimaryColor: primaryColor,
-    brandFooterText:
-      import.meta.env.VITE_BRAND_FOOTER_TEXT || "Part of Mayflower Agile Tools",
+    brandFooterText: import.meta.env.VITE_BRAND_FOOTER_TEXT || "Part of Mayflower Agile Tools",
     colors: {
       primary: primaryColor,
       primaryHover: darkenColor(primaryColor, 10),

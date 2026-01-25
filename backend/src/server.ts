@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import path from "node:path";
 import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
@@ -18,6 +19,12 @@ app.use(
 );
 
 app.use(express.json());
+
+// Serve static frontend files in production
+if (process.env.NODE_ENV === "production") {
+  const frontendDistPath = path.join(process.cwd(), "frontend/dist");
+  app.use(express.static(frontendDistPath));
+}
 
 const io = new Server(httpServer, {
   cors: {
@@ -39,6 +46,16 @@ app.get("/metrics", (_req, res) => {
   const stats = sessionService.getStats();
   res.status(200).json(stats);
 });
+
+// SPA fallback - serve index.html for all non-API routes in production
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res) => {
+    if (!req.path.startsWith("/health") && !req.path.startsWith("/metrics")) {
+      const frontendDistPath = path.join(process.cwd(), "frontend/dist");
+      res.sendFile(path.join(frontendDistPath, "index.html"));
+    }
+  });
+}
 
 // Socket.io connection handling
 io.on("connection", (socket) => {
