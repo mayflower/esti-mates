@@ -1,0 +1,63 @@
+{
+  "app.connecting": "Verbindung zum Server wird hergestellt...",
+
+  "landing.title": "MF EstiMates",
+  "landing.createSession": "Neue Session erstellen",
+  "landing.yourName": "Dein Name",
+  "landing.createButton": "Neue Session erstellen",
+  "landing.or": "oder",
+  "landing.joinSession": "Bestehender Session beitreten",
+  "landing.sessionIdPlaceholder": "Session-ID (6 Zeichen)",
+  "landing.joinButton": "Session beitreten",
+  "landing.nameRequired": "Bitte gib deinen Namen ein",
+  "landing.sessionIdRequired": "Bitte gib eine Session-ID ein",
+
+  "session.joinTitle": "Session beitreten",
+  "session.enterName": "Gib deinen Namen ein",
+  "session.joinButton": "Beitreten",
+  "session.nameRequired": "Bitte gib deinen Namen ein",
+  "session.invalidSessionId": "Ungültige Session-ID",
+  "session.sessionIdCopied": "Session-ID in die Zwischenablage kopiert!",
+  "session.copyFailed": "Kopieren fehlgeschlagen. Session-ID: {sessionId}",
+  "session.clickToCopy": "Klicken zum Kopieren",
+  "session.observerMode": "Beobachter-Modus",
+  "session.participantMode": "Teilnehmer-Modus",
+  "session.switchToParticipant": "Zu Teilnehmer-Modus wechseln",
+  "session.switchToObserver": "Zu Beobachter-Modus wechseln",
+
+  "moderator.revealCards": "Karten aufdecken",
+  "moderator.revealAriaLabel": "Alle Teilnehmerkarten aufdecken",
+  "moderator.revealWaiting": "Karten aufdecken (warte auf Schätzungen)",
+  "moderator.newRound": "Neue Runde",
+  "moderator.newRoundAriaLabel": "Neue Schätzrunde starten",
+
+  "participants.title": "Teilnehmer ({count})",
+  "participants.regionLabel": "Session-Teilnehmer",
+  "participants.moderatorLabel": "Session-Moderator",
+  "participants.observerLabel": "Beobachter (stimmt nicht ab)",
+  "participants.observer": "Beobachter",
+  "participants.makeParticipant": "Zum Teilnehmer machen",
+  "participants.makeObserver": "Zum Beobachter machen",
+  "participants.transferModerator": "Moderator-Rolle übertragen",
+  "participants.statusObserver": "Beobachter",
+  "participants.statusVoted": "Hat abgestimmt",
+  "participants.statusVotedValue": "Stimme: {value}",
+  "participants.statusWaiting": "Wartet auf Abstimmung",
+
+  "results.title": "Ergebnis",
+  "results.regionLabel": "Abstimmungsergebnis",
+  "results.noVotes": "Noch keine Stimmen",
+  "results.averageLabel": "Durchschnittliche Schätzung: {value} Story Points",
+  "results.voteCount": "{count, plural, one {# Stimme} other {# Stimmen}}",
+
+  "dialog.error": "Fehler",
+  "dialog.info": "Information",
+  "dialog.ok": "OK",
+
+  "toast.closeLabel": "Benachrichtigung schließen",
+
+  "estimation.observerMessage": "Du bist im Beobachter-Modus und kannst nicht schätzen",
+
+  "language.de": "DE",
+  "language.en": "EN"
+}
