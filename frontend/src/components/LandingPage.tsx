@@ -10,13 +10,12 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: ${(props) => props.theme.spacing.lg};
   background: ${(props) => props.theme.colors.background};
 `;
 
 const Logo = styled.img`
-  max-width: 200px;
-  margin-bottom: ${(props) => props.theme.spacing.lg};
+  height: 80px;
+  margin-bottom: ${(props) => props.theme.spacing.xl};
 `;
 
 const Title = styled.h1`
@@ -32,7 +31,7 @@ const Card = styled.div`
   box-shadow: ${(props) => props.theme.shadows.md};
   padding: ${(props) => props.theme.spacing.xl};
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
 `;
 
 const Input = styled.input`
@@ -127,7 +126,7 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
       alert("Please enter your name");
       return;
     }
-    navigate(`/session/${sessionId.toUpperCase()}`);
+    navigate(`/session/${sessionId.trim().toUpperCase()}`);
   };
 
   return (
@@ -142,18 +141,18 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
           onChange={(e) => setName(e.target.value)}
           maxLength={50}
         />
-        <Button onClick={handleCreate}>Create Session</Button>
+        <Button onClick={handleCreate}>Create New Session</Button>
 
         <Divider>or</Divider>
 
         <Input
           type="text"
-          placeholder="Session ID"
+          placeholder="Session ID (6 characters)"
           value={sessionId}
           onChange={(e) => setSessionId(e.target.value)}
           maxLength={6}
         />
-        <Button onClick={handleJoin}>Join Session</Button>
+        <Button onClick={handleJoin}>Join Existing Session</Button>
       </Card>
       <Footer>{branding.brandFooterText}</Footer>
     </Container>
