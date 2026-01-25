@@ -36,7 +36,7 @@ function renderLandingPage(props = {}) {
 describe("LandingPage", () => {
   it("should render create session button", () => {
     renderLandingPage();
-    const element = screen.getByText(/Create New Session/i);
+    const element = screen.getByRole('button', { name: /Create New Session/i });
     expect(element).toBeDefined();
   });
 
@@ -46,7 +46,7 @@ describe("LandingPage", () => {
     const nameInput = screen.getByPlaceholderText("Your name");
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
 
-    const createButton = screen.getByText("Create New Session");
+    const createButton = screen.getByRole('button', { name: /Create New Session/i });
     fireEvent.click(createButton);
 
     expect(props.onCreateSession).toHaveBeenCalledWith("John Doe");
