@@ -41,7 +41,13 @@ interface Props {
 
 export function EstimationCard({ value, selected, onSelect, disabled }: Props) {
   return (
-    <Card $selected={selected} onClick={() => onSelect(value)} disabled={disabled}>
+    <Card
+      $selected={selected}
+      onClick={() => onSelect(value)}
+      disabled={disabled}
+      aria-label={`Estimate ${getEstimateLabel(value)} story points`}
+      aria-pressed={selected}
+    >
       {getEstimateLabel(value)}
     </Card>
   );
