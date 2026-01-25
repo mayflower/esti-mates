@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ThemeProvider } from 'styled-components';
 import { createTheme } from '../styles/theme';
+import { AppIntlProvider } from '../i18n';
 import { NotificationProvider, useNotification } from './NotificationContext';
 
 const theme = createTheme('#1a73e8');
@@ -9,7 +10,9 @@ const theme = createTheme('#1a73e8');
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
-      <NotificationProvider>{children}</NotificationProvider>
+      <AppIntlProvider>
+        <NotificationProvider>{children}</NotificationProvider>
+      </AppIntlProvider>
     </ThemeProvider>
   );
 }
