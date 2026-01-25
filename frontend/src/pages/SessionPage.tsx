@@ -1,12 +1,13 @@
 // frontend/src/pages/SessionPage.tsx
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { EstimationCards } from "../components/EstimationCards";
 import { ModeratorControls } from "../components/ModeratorControls";
 import { ParticipantList } from "../components/ParticipantList";
 import { ResultsView } from "../components/ResultsView";
 import { useBranding } from "../contexts/BrandingContext";
+import { useNotification } from "../contexts/NotificationContext";
 import { useSession } from "../contexts/SessionContext";
 import type { EstimateValue } from "../types/types";
 
@@ -123,8 +124,10 @@ const ObserverToggleButton = styled.button<{ $isObserver: boolean }>`
 export function SessionPage() {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const { name: nameFromState } = (location.state as { name?: string }) || {};
   const branding = useBranding();
+  const { toast, dialog } = useNotification();
   const {
     sessionId,
     participants,
@@ -160,11 +163,13 @@ export function SessionPage() {
 
   const handleJoin = () => {
     if (!name.trim()) {
-      alert("Please enter your name");
+      dialog.error("Please enter your name");
       return;
     }
     if (!urlSessionId) {
-      alert("Invalid session ID");
+      dialog.error("Invalid session ID", {
+        onClose: () => navigate('/'),
+      });
       return;
     }
     joinSession(urlSessionId, name.trim());
@@ -179,10 +184,10 @@ export function SessionPage() {
 
     try {
       await navigator.clipboard.writeText(sessionId);
-      alert("Session ID copied to clipboard!");
+      toast.success("Session ID copied to clipboard!");
     } catch (error) {
       console.error("Failed to copy:", error);
-      alert(`Failed to copy. Session ID: ${sessionId}`);
+      dialog.error(`Failed to copy. Session ID: ${sessionId}`);
     }
   };
 
