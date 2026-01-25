@@ -13,19 +13,24 @@ export function useSocket() {
       transports: ["websocket", "polling"],
     });
 
-    newSocket.on("connect", () => {
+    const handleConnect = () => {
       console.log("Connected to server");
       setConnected(true);
-    });
+    };
 
-    newSocket.on("disconnect", () => {
+    const handleDisconnect = () => {
       console.log("Disconnected from server");
       setConnected(false);
-    });
+    };
+
+    newSocket.on("connect", handleConnect);
+    newSocket.on("disconnect", handleDisconnect);
 
     setSocket(newSocket);
 
     return () => {
+      newSocket.off("connect", handleConnect);
+      newSocket.off("disconnect", handleDisconnect);
       newSocket.close();
     };
   }, []);

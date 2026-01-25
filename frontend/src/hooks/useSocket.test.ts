@@ -7,6 +7,7 @@ import { useSocket } from "./useSocket";
 vi.mock("socket.io-client", () => ({
   io: vi.fn(() => ({
     on: vi.fn(),
+    off: vi.fn(),
     close: vi.fn(),
   })),
 }));
