@@ -33,10 +33,14 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 - **Winston** 3.17.0 - Logging
 - **CORS** 2.8.5 - Cross-origin resource sharing
 
-### Testing & Tooling
+### Testing
 - **Vitest** 2.1.8 - Unit testing framework
 - **React Testing Library** 16.3.2 - Component testing
+
+### Linting
 - **Biome** 1.9.4 - Linting and formatting
+
+### Deployment
 - **Docker** - Containerization
 - **Kubernetes** - Orchestration support
 
@@ -59,9 +63,9 @@ cd mf-estimates
 npm install
 ```
 
-### Development Setup
+## Development Commands
 
-#### Option 1: Docker Compose (Recommended)
+### Docker Compose
 
 Run both frontend and backend in development mode with hot reload:
 
@@ -78,7 +82,7 @@ To stop:
 docker-compose --profile dev down
 ```
 
-#### Option 2: Manual Setup
+### Manual
 
 Run frontend and backend separately in different terminals:
 
@@ -92,31 +96,12 @@ npm run dev:backend
 
 Frontend will be available at http://localhost:3000, backend at http://localhost:3001.
 
-## Development Commands
-
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install all workspace dependencies |
-| `npm run dev:frontend` | Start frontend dev server (http://localhost:3000) |
-| `npm run dev:backend` | Start backend dev server (http://localhost:3001) |
-| `docker-compose --profile dev up` | Start both services in Docker |
-| `npm test` | Run all tests (frontend + backend) |
-| `npm run build` | Build both frontend and backend for production |
-| `npm run lint` | Lint code with Biome |
-| `npm run format` | Format code with Biome |
-
-### Workspace-Specific Commands
-
+Additional commands:
 ```bash
-# Frontend only
-npm run dev --workspace=frontend
-npm run build --workspace=frontend
-npm run test --workspace=frontend
-
-# Backend only
-npm run dev --workspace=backend
-npm run build --workspace=backend
-npm run test --workspace=backend
+npm test              # Run all tests (frontend + backend)
+npm run build         # Build both frontend and backend for production
+npm run lint          # Lint code with Biome
+npm run format        # Format code with Biome
 ```
 
 ## Configuration
@@ -268,90 +253,6 @@ Observers don't affect average calculations and aren't counted in voting complet
 | `session_updated` | `{session: Session}` | Session state changed |
 | `error` | `{message: string}` | Error occurred |
 
-### Session Object Structure
-
-```typescript
-{
-  id: string;                    // 6-character session ID
-  moderatorId: string;           // Participant ID of moderator
-  participants: {
-    [id: string]: {
-      id: string;
-      name: string;
-      estimate: string | null;
-      isObserver: boolean;
-    }
-  };
-  cardsRevealed: boolean;
-  createdAt: number;             // Unix timestamp
-  lastActivity: number;          // Unix timestamp
-}
-```
-
-## Production Deployment
-
-### Docker Build
-
-```bash
-# Build production image
-docker build -t mf-estimates:latest .
-
-# Run container
-docker run -p 3001:3001 \
-  -e NODE_ENV=production \
-  -e PORT=3001 \
-  -e FRONTEND_URL=https://your-domain.com \
-  mf-estimates:latest
-```
-
-### Environment Configuration
-
-For production, set appropriate environment variables:
-
-```bash
-# Backend
-export PORT=3001
-export FRONTEND_URL=https://estimates.mayflower.de
-export NODE_ENV=production
-
-# Frontend (build-time variables)
-export VITE_BACKEND_URL=https://api.estimates.mayflower.de
-export VITE_BRAND_NAME="Mayflower GmbH"
-export VITE_BRAND_PRIMARY_COLOR="#1a73e8"
-```
-
-### Kubernetes Deployment
-
-See Kubernetes manifests in deployment documentation for full configuration examples including:
-- Deployment with resource limits
-- Service configuration
-- Ingress rules
-- ConfigMaps for branding
-- Horizontal Pod Autoscaling
-
-## Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-npm test
-
-# Run with coverage
-npm run test:ci --workspace=frontend -- --coverage
-npm run test:ci --workspace=backend -- --coverage
-
-# Run in watch mode (development)
-npm run test --workspace=frontend
-npm run test --workspace=backend
-```
-
-### Test Structure
-
-- **Frontend tests**: Located in `frontend/src/__tests__/` and co-located with components
-- **Backend tests**: Located in `backend/src/__tests__/` and co-located with services
-- **Test framework**: Vitest with React Testing Library for components
-
 ## License
 
 **Proprietary** - Mayflower GmbH
@@ -368,14 +269,3 @@ For internal contributors:
 - Update documentation as needed
 - Use conventional commit messages
 - Create feature branches from `main`
-
-## Support
-
-For internal support and questions:
-- Create an issue in the project repository
-- Contact the development team via internal channels
-- Refer to documentation in `docs/` directory
-
----
-
-**Built with ❤️ by Mayflower GmbH**
