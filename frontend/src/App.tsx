@@ -1,5 +1,6 @@
 // frontend/src/App.tsx
 import React from "react";
+import { FormattedMessage } from 'react-intl';
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
 import { BrandingProvider } from "./contexts/BrandingContext";
@@ -7,6 +8,7 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import { SessionProvider } from "./contexts/SessionContext";
 import { useSession } from "./contexts/SessionContext";
 import { useSocket } from "./hooks/useSocket";
+import { AppIntlProvider } from './i18n';
 import { SessionPage } from "./pages/SessionPage";
 
 function LandingPageWrapper() {
@@ -45,28 +47,32 @@ export function App() {
 
   if (!connected || !socket) {
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-        }}
-      >
-        Connecting to server...
-      </div>
+      <AppIntlProvider>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100vh",
+          }}
+        >
+          <FormattedMessage id="app.connecting" />
+        </div>
+      </AppIntlProvider>
     );
   }
 
   return (
-    <BrandingProvider>
-      <NotificationProvider>
-        <SessionProvider socket={socket}>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </SessionProvider>
-      </NotificationProvider>
-    </BrandingProvider>
+    <AppIntlProvider>
+      <BrandingProvider>
+        <NotificationProvider>
+          <SessionProvider socket={socket}>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </SessionProvider>
+        </NotificationProvider>
+      </BrandingProvider>
+    </AppIntlProvider>
   );
 }
