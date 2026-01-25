@@ -1,4 +1,4 @@
-.PHONY: install dev build test lint clean
+.PHONY: install dev build test lint format k8s-dev clean
 
 install:
 	npm install
@@ -17,6 +17,9 @@ lint:
 
 format:
 	npm run format
+
+k8s-dev:
+	tilt up
 
 clean:
 	rm -rf node_modules frontend/node_modules backend/node_modules

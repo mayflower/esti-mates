@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mf-estimates
+  labels:
+    app: mf-estimates
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mf-estimates
+  template:
+    metadata:
+      labels:
+        app: mf-estimates
+    spec:
+      containers:
+      - name: mf-estimates
+        image: mf-estimates:latest
+        ports:
+        - containerPort: 3001
+          name: http
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3001"
+        envFrom:
+        - configMapRef:
+            name: mf-estimates-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 5
