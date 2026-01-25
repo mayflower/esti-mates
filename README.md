@@ -26,7 +26,7 @@ Planning poker (also known as Scrum poker) is a consensus-based estimation techn
 
 ### Backend
 - **Node.js** 20 - Runtime environment
-- **Express** 5.0.1 - Web framework
+- **Express** 4.22.1 - Web framework
 - **Socket.io** 4.8.1 - Real-time WebSocket server
 - **TypeScript** 5.7.3 - Type safety
 - **Winston** 3.17.0 - Logging
@@ -112,7 +112,7 @@ Configure branding by setting environment variables in `.env` file or Docker Com
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `VITE_BRAND_NAME` | `"Mayflower GmbH"` | Company/product name displayed in header |
-| `VITE_BRAND_LOGO_URL` | `"/assets/mayflower-logo.svg"` | Path to logo image |
+| `VITE_BRAND_LOGO_URL` | `"/assets/logo.svg"` | Path to logo image |
 | `VITE_BRAND_PRIMARY_COLOR` | `"#1a73e8"` | Primary theme color (hex) |
 | `VITE_BRAND_FOOTER_TEXT` | `"Part of Mayflower Agile Tools"` | Footer text |
 | `VITE_BACKEND_URL` | `"http://localhost:3001"` | Backend API URL |
@@ -204,7 +204,7 @@ As the session creator, you become the **moderator** with exclusive controls to:
 
 ### Estimation Flow
 
-1. **Select your estimate** - Click on a card value (0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, ?, ☕)
+1. **Select your estimate** - Click on a card value (1, 2, 3, 5, 8, 13, 21, ?)
 2. **Wait for others** - Your card appears face-down to others until reveal
 3. **Moderator reveals** - Moderator clicks "Reveal Cards" when everyone has voted
 4. **View results** - See all estimates and the calculated average
@@ -212,13 +212,9 @@ As the session creator, you become the **moderator** with exclusive controls to:
 
 ### Observer Mode
 
-To join as an observer (watch without voting):
+Observer mode allows users to watch sessions without participating in voting. Observers can see all activity but cannot submit estimates and aren't counted in voting completion or average calculations.
 
-1. Join the session as normal
-2. Toggle "Observer Mode" in the session
-3. You can see all activity but cannot submit estimates
-
-Observers don't affect average calculations and aren't counted in voting completion.
+**Note:** In the current version, observer mode must be set when joining a session by including `isObserver: true` in the join request. There is no UI toggle available.
 
 ## API Endpoints
 
