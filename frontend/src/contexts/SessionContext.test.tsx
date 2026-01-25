@@ -2,7 +2,12 @@ import { renderHook } from "@testing-library/react";
 import type { Socket } from "socket.io-client";
 // frontend/src/contexts/SessionContext.test.tsx
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ThemeProvider } from "styled-components";
+import { createTheme } from "../styles/theme";
+import { NotificationProvider } from "./NotificationContext";
 import { SessionProvider, useSession } from "./SessionContext";
+
+const theme = createTheme('#1a73e8');
 
 describe("SessionContext", () => {
   let mockSocket: Partial<Socket>;
@@ -17,7 +22,11 @@ describe("SessionContext", () => {
 
   it("should provide initial state", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+      <ThemeProvider theme={theme}>
+        <NotificationProvider>
+          <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     );
 
     const { result } = renderHook(() => useSession(), { wrapper });
@@ -29,7 +38,11 @@ describe("SessionContext", () => {
 
   it("should have toggleObserver function", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+      <ThemeProvider theme={theme}>
+        <NotificationProvider>
+          <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     );
 
     const { result } = renderHook(() => useSession(), { wrapper });
@@ -39,7 +52,11 @@ describe("SessionContext", () => {
 
   it("should have transferModerator function", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+      <ThemeProvider theme={theme}>
+        <NotificationProvider>
+          <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     );
 
     const { result } = renderHook(() => useSession(), { wrapper });
@@ -49,7 +66,11 @@ describe("SessionContext", () => {
 
   it("should emit toggle_observer event when toggleObserver is called", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+      <ThemeProvider theme={theme}>
+        <NotificationProvider>
+          <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     );
 
     const { result } = renderHook(() => useSession(), { wrapper });
@@ -63,7 +84,11 @@ describe("SessionContext", () => {
 
   it("should emit transfer_moderator event when transferModerator is called", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+      <ThemeProvider theme={theme}>
+        <NotificationProvider>
+          <SessionProvider socket={mockSocket as Socket}>{children}</SessionProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     );
 
     const { result } = renderHook(() => useSession(), { wrapper });

@@ -3,6 +3,7 @@ import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 import type { Participant } from "../types/types";
+import { useNotification } from "./NotificationContext";
 
 interface SessionState {
   sessionId: string | null;
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export function SessionProvider({ children, socket }: Props) {
+  const { dialog } = useNotification();
   const [state, setState] = useState<SessionState>({
     sessionId: null,
     participants: [],
@@ -135,7 +137,7 @@ export function SessionProvider({ children, socket }: Props) {
 
     socket.on("error", (data) => {
       console.error("Socket error:", data.message);
-      alert(data.message);
+      dialog.error(data.message);
     });
 
     return () => {
