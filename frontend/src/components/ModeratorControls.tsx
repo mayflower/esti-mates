@@ -7,6 +7,7 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   background: ${(props) => props.theme.colors.surface};
   border-top: 1px solid ${(props) => props.theme.colors.border};
   padding: ${(props) => props.theme.spacing.md} ${(props) => props.theme.spacing.lg};
@@ -14,6 +15,11 @@ const Container = styled.div`
   justify-content: center;
   gap: ${(props) => props.theme.spacing.md};
   box-shadow: ${(props) => props.theme.shadows.lg};
+
+  @media (max-width: 768px) {
+    padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
+    gap: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
@@ -44,6 +50,12 @@ const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    min-width: 120px;
+    font-size: 0.9rem;
+    padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
+  }
 `;
 
 interface Props {
@@ -57,13 +69,21 @@ export function ModeratorControls({ revealed, hasEstimates, onReveal, onNewRound
   return (
     <Container>
       {!revealed && (
-        <Button onClick={onReveal} disabled={!hasEstimates}>
+        <Button
+          onClick={onReveal}
+          disabled={!hasEstimates}
+          aria-label={hasEstimates ? "Reveal all participant cards" : "Reveal cards (waiting for estimates)"}
+        >
           Reveal Cards
         </Button>
       )}
 
       {revealed && (
-        <Button onClick={onNewRound} $variant="secondary">
+        <Button
+          onClick={onNewRound}
+          $variant="secondary"
+          aria-label="Start a new estimation round"
+        >
           New Round
         </Button>
       )}
