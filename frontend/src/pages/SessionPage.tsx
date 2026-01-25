@@ -113,6 +113,7 @@ export function SessionPage() {
     roundRevealed,
     revealedEstimates,
     average,
+    currentSocketId,
     joinSession,
     submitEstimate,
     revealCards,
@@ -144,14 +145,19 @@ export function SessionPage() {
     submitEstimate(value);
   };
 
-  const handleCopySessionId = () => {
-    if (sessionId) {
-      navigator.clipboard.writeText(sessionId);
+  const handleCopySessionId = async () => {
+    if (!sessionId) return;
+
+    try {
+      await navigator.clipboard.writeText(sessionId);
       alert("Session ID copied to clipboard!");
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      alert(`Failed to copy. Session ID: ${sessionId}`);
     }
   };
 
-  const currentParticipant = participants.find((p) => p.socketId === sessionId);
+  const currentParticipant = participants.find((p) => p.socketId === currentSocketId);
   const isObserver = currentParticipant?.isObserver || false;
   const hasEstimates = participants.some((p) => p.currentEstimate !== null);
 

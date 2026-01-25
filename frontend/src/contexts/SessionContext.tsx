@@ -11,6 +11,7 @@ interface SessionState {
   roundRevealed: boolean;
   revealedEstimates: Record<string, number> | null;
   average: number | null;
+  currentSocketId: string | null;
 }
 
 interface SessionContextType extends SessionState {
@@ -39,7 +40,13 @@ export function SessionProvider({ children, socket }: Props) {
     roundRevealed: false,
     revealedEstimates: null,
     average: null,
+    currentSocketId: socket?.id || null,
   });
+
+  // Update currentSocketId when socket changes
+  useEffect(() => {
+    setState((prev) => ({ ...prev, currentSocketId: socket?.id ?? null }));
+  }, [socket?.id]);
 
   // Event listeners
   useEffect(() => {
