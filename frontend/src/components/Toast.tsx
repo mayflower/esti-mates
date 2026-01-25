@@ -16,12 +16,6 @@ const iconMap = {
   info: FiInfo,
 };
 
-const colorMap = {
-  success: { border: '#22c55e', text: '#15803d' },
-  error: { border: '#ef4444', text: '#b91c1c' },
-  info: { border: '#3b82f6', text: '#1e40af' },
-};
-
 const slideIn = keyframes`
   from { transform: translateX(calc(100% + 1rem)); }
   to { transform: translateX(0); }
@@ -41,7 +35,11 @@ const StyledToastRoot = styled(RadixToast.Root)<{ $type: ToastType }>`
   background: white;
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid ${p => colorMap[p.$type].border};
+  border-left: 4px solid ${p => {
+    if (p.$type === 'success') return p.theme.colors.success;
+    if (p.$type === 'error') return p.theme.colors.error;
+    return p.theme.colors.primary;
+  }};
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -60,7 +58,11 @@ const IconWrapper = styled.div<{ $type: ToastType }>`
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  color: ${p => colorMap[p.$type].text};
+  color: ${p => {
+    if (p.$type === 'success') return p.theme.colors.success;
+    if (p.$type === 'error') return p.theme.colors.error;
+    return p.theme.colors.primary;
+  }};
 `;
 
 const Message = styled(RadixToast.Description)`
