@@ -1,5 +1,6 @@
 import * as RadixToast from '@radix-ui/react-toast';
 import { FiCheckCircle, FiXCircle, FiInfo, FiX } from 'react-icons/fi';
+import { useIntl } from 'react-intl';
 import styled, { keyframes } from 'styled-components';
 import { ToastType } from '../contexts/NotificationContext';
 
@@ -89,12 +90,13 @@ const CloseIcon = styled(FiX)`
 `;
 
 export function Toast({ id, message, type, onClose }: ToastProps) {
+  const intl = useIntl();
   const Icon = iconMap[type];
   return (
     <StyledToastRoot $type={type} data-type={type}>
       <IconWrapper $type={type}><Icon /></IconWrapper>
       <Message>{message}</Message>
-      <CloseButton aria-label="Close notification" onClick={() => onClose(id)}>
+      <CloseButton aria-label={intl.formatMessage({ id: 'toast.closeLabel' })} onClick={() => onClose(id)}>
         <CloseIcon />
       </CloseButton>
     </StyledToastRoot>

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import * as RadixToast from '@radix-ui/react-toast';
 import { ThemeProvider } from 'styled-components';
+import { AppIntlProvider } from '../i18n';
 import { Toast } from './Toast';
 
 const theme = {
@@ -44,10 +45,12 @@ const theme = {
 function renderToast(props: Parameters<typeof Toast>[0]) {
   return render(
     <ThemeProvider theme={theme}>
-      <RadixToast.Provider>
-        <Toast {...props} />
-        <RadixToast.Viewport />
-      </RadixToast.Provider>
+      <AppIntlProvider>
+        <RadixToast.Provider>
+          <Toast {...props} />
+          <RadixToast.Viewport />
+        </RadixToast.Provider>
+      </AppIntlProvider>
     </ThemeProvider>
   );
 }

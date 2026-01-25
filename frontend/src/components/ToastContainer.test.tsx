@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ThemeProvider } from 'styled-components';
+import { AppIntlProvider } from '../i18n';
 import { ToastContainer } from './ToastContainer';
 import { Toast } from '../contexts/NotificationContext';
 
@@ -44,7 +45,9 @@ const theme = {
 function renderToastContainer(props: Parameters<typeof ToastContainer>[0]) {
   return render(
     <ThemeProvider theme={theme}>
-      <ToastContainer {...props} />
+      <AppIntlProvider>
+        <ToastContainer {...props} />
+      </AppIntlProvider>
     </ThemeProvider>
   );
 }
