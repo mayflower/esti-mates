@@ -1,7 +1,7 @@
 // frontend/src/components/ParticipantList.tsx
 import React from "react";
 import styled from "styled-components";
-import type { Participant } from "../types/types";
+import type { Participant, EstimateValue } from "../types/types";
 import { getEstimateLabel } from "../types/types";
 
 const Container = styled.div`
@@ -60,7 +60,27 @@ const StatusIndicator = styled.div<{ $status: "waiting" | "estimated" | "reveale
 interface Props {
   participants: Participant[];
   revealed: boolean;
-  revealedEstimates: Record<string, number> | null;
+  revealedEstimates: Record<string, EstimateValue> | null;
+}
+
+function getStatusAriaLabel(
+  participant: Participant,
+  revealed: boolean,
+  revealedEstimates: Record<string, EstimateValue> | null
+): string {
+  if (participant.isObserver) {
+    return "Observer";
+  }
+  if (revealed && revealedEstimates) {
+    const estimate = revealedEstimates[participant.socketId];
+    if (estimate !== undefined) {
+      return `Voted: ${getEstimateLabel(estimate)}`;
+    }
+  }
+  if (participant.currentEstimate !== null) {
+    return "Voted";
+  }
+  return "Waiting for vote";
 }
 
 export function ParticipantList({ participants, revealed, revealedEstimates }: Props) {
@@ -73,7 +93,7 @@ export function ParticipantList({ participants, revealed, revealedEstimates }: P
       const estimate = revealedEstimates[participant.socketId];
       return (
         <StatusIndicator $status="revealed">
-          {estimate !== undefined ? getEstimateLabel(estimate as any) : "-"}
+          {estimate !== undefined ? getEstimateLabel(estimate) : "-"}
         </StatusIndicator>
       );
     }
@@ -86,17 +106,27 @@ export function ParticipantList({ participants, revealed, revealedEstimates }: P
   };
 
   return (
-    <Container>
+    <Container role="region" aria-label="Session participants">
       <Title>Participants ({participants.length})</Title>
 
       {participants.map((participant) => (
         <ParticipantItem key={participant.socketId}>
           <Name>
             {participant.name}
-            {participant.isModerator && <Badge $type="moderator">👑</Badge>}
-            {participant.isObserver && <Badge $type="observer">Observer</Badge>}
+            {participant.isModerator && (
+              <Badge $type="moderator" aria-label="Session moderator">
+                👑
+              </Badge>
+            )}
+            {participant.isObserver && (
+              <Badge $type="observer" aria-label="Observer (not voting)">
+                Observer
+              </Badge>
+            )}
           </Name>
-          {getStatus(participant)}
+          <span aria-label={getStatusAriaLabel(participant, revealed, revealedEstimates)}>
+            {getStatus(participant)}
+          </span>
         </ParticipantItem>
       ))}
     </Container>
