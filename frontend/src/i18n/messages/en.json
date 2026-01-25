@@ -1,0 +1,63 @@
+{
+  "app.connecting": "Connecting to server...",
+
+  "landing.title": "MF EstiMates",
+  "landing.createSession": "Create New Session",
+  "landing.yourName": "Your name",
+  "landing.createButton": "Create New Session",
+  "landing.or": "or",
+  "landing.joinSession": "Join Existing Session",
+  "landing.sessionIdPlaceholder": "Session ID (6 characters)",
+  "landing.joinButton": "Join Existing Session",
+  "landing.nameRequired": "Please enter your name",
+  "landing.sessionIdRequired": "Please enter a session ID",
+
+  "session.joinTitle": "Join Session",
+  "session.enterName": "Enter your name",
+  "session.joinButton": "Join",
+  "session.nameRequired": "Please enter your name",
+  "session.invalidSessionId": "Invalid session ID",
+  "session.sessionIdCopied": "Session ID copied to clipboard!",
+  "session.copyFailed": "Failed to copy. Session ID: {sessionId}",
+  "session.clickToCopy": "Click to copy",
+  "session.observerMode": "Observer Mode",
+  "session.participantMode": "Participant Mode",
+  "session.switchToParticipant": "Switch to Participant mode",
+  "session.switchToObserver": "Switch to Observer mode",
+
+  "moderator.revealCards": "Reveal Cards",
+  "moderator.revealAriaLabel": "Reveal all participant cards",
+  "moderator.revealWaiting": "Reveal cards (waiting for estimates)",
+  "moderator.newRound": "New Round",
+  "moderator.newRoundAriaLabel": "Start a new estimation round",
+
+  "participants.title": "Participants ({count})",
+  "participants.regionLabel": "Session participants",
+  "participants.moderatorLabel": "Session moderator",
+  "participants.observerLabel": "Observer (not voting)",
+  "participants.observer": "Observer",
+  "participants.makeParticipant": "Make Participant",
+  "participants.makeObserver": "Make Observer",
+  "participants.transferModerator": "Transfer Moderator Role",
+  "participants.statusObserver": "Observer",
+  "participants.statusVoted": "Voted",
+  "participants.statusVotedValue": "Voted: {value}",
+  "participants.statusWaiting": "Waiting for vote",
+
+  "results.title": "Results",
+  "results.regionLabel": "Voting results",
+  "results.noVotes": "No votes yet",
+  "results.averageLabel": "Average estimate: {value} story points",
+  "results.voteCount": "{count, plural, one {# vote} other {# votes}}",
+
+  "dialog.error": "Error",
+  "dialog.info": "Information",
+  "dialog.ok": "OK",
+
+  "toast.closeLabel": "Close notification",
+
+  "estimation.observerMessage": "You are in observer mode and cannot estimate",
+
+  "language.de": "DE",
+  "language.en": "EN"
+}
