@@ -1,4 +1,5 @@
 // frontend/src/components/ModeratorControls.tsx
+import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -62,6 +63,8 @@ interface Props {
 }
 
 export function ModeratorControls({ revealed, hasEstimates, onReveal, onNewRound }: Props) {
+  const intl = useIntl();
+
   return (
     <Container>
       {!revealed && (
@@ -69,16 +72,22 @@ export function ModeratorControls({ revealed, hasEstimates, onReveal, onNewRound
           onClick={onReveal}
           disabled={!hasEstimates}
           aria-label={
-            hasEstimates ? "Reveal all participant cards" : "Reveal cards (waiting for estimates)"
+            hasEstimates
+              ? intl.formatMessage({ id: "moderator.revealAriaLabel" })
+              : intl.formatMessage({ id: "moderator.revealWaiting" })
           }
         >
-          Reveal Cards
+          <FormattedMessage id="moderator.revealCards" />
         </Button>
       )}
 
       {revealed && (
-        <Button onClick={onNewRound} $variant="secondary" aria-label="Start a new estimation round">
-          New Round
+        <Button
+          onClick={onNewRound}
+          $variant="secondary"
+          aria-label={intl.formatMessage({ id: "moderator.newRoundAriaLabel" })}
+        >
+          <FormattedMessage id="moderator.newRound" />
         </Button>
       )}
     </Container>
