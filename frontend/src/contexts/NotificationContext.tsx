@@ -120,14 +120,14 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     },
   }), [showDialog]);
 
-  const value: NotificationContextValue = {
+  const value = useMemo<NotificationContextValue>(() => ({
     toasts,
     currentDialog,
     toast,
     dialog,
     removeToast,
     closeDialog,
-  };
+  }), [toasts, currentDialog, toast, dialog, removeToast, closeDialog]);
 
   return (
     <NotificationContext.Provider value={value}>
