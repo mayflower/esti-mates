@@ -22,7 +22,6 @@ const Title = styled.h2`
 
 const ParticipantItem = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
   border-radius: ${(props) => props.theme.borderRadius.sm};
@@ -34,7 +33,6 @@ const Name = styled.div`
   font-weight: 500;
   color: ${(props) => props.theme.colors.text};
   display: flex;
-  align-items: center;
   gap: ${(props) => props.theme.spacing.xs};
 `;
 
@@ -56,7 +54,7 @@ const StatusIndicator = styled.div<{ $status: "waiting" | "estimated" | "reveale
       : props.$status === "estimated"
         ? props.theme.colors.success
         : props.theme.colors.text};
-  font-weight: ${(props) => (props.$status === "revealed" ? "700" : "400")};
+  ${(props) => props.$status === "revealed" && "font-weight: 700;"}
 `;
 
 interface Props {
