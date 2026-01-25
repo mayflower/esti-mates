@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  mf-estimates:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+      - VITE_BACKEND_URL=http://localhost:3001
+      - VITE_BRAND_NAME=Mayflower GmbH
+      - VITE_BRAND_LOGO_URL=/assets/mayflower-logo.svg
+      - VITE_BRAND_PRIMARY_COLOR=#1a73e8
+      - VITE_BRAND_FOOTER_TEXT=Part of Mayflower Agile Tools
+    volumes:
+      - ./backend/src:/app/backend/src
+      - ./frontend/src:/app/frontend/src
+    restart: unless-stopped
+
+  # Development services
+  frontend-dev:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    command: npm run dev:frontend
+    environment:
+      - VITE_BACKEND_URL=http://localhost:3001
+    profiles:
+      - dev
+
+  backend-dev:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3001:3001"
+    command: npm run dev:backend
+    environment:
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+    profiles:
+      - dev
