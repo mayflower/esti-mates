@@ -356,4 +356,20 @@ export class SessionService {
       connectedUsers: totalUsers,
     };
   }
+
+  cleanupExpiredSessions(): number {
+    const now = new Date();
+    const TTL_MS = 4 * 60 * 60 * 1000; // 4 hours
+    let cleaned = 0;
+
+    for (const [sessionId, session] of this.sessions.entries()) {
+      const age = now.getTime() - session.lastActivity.getTime();
+      if (age > TTL_MS) {
+        this.sessions.delete(sessionId);
+        cleaned++;
+      }
+    }
+
+    return cleaned;
+  }
 }

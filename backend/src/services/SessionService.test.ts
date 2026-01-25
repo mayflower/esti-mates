@@ -624,4 +624,30 @@ describe("SessionService", () => {
       expect(result.error).toBe("Invalid target socket ID");
     });
   });
+
+  describe("cleanupExpiredSessions", () => {
+    it("should remove sessions older than 4 hours", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+
+      // Manually set old timestamp
+      const session = service.getSession(sessionId);
+      if (session) {
+        session.lastActivity = new Date(Date.now() - 5 * 60 * 60 * 1000); // 5 hours ago
+      }
+
+      const cleaned = service.cleanupExpiredSessions();
+
+      expect(cleaned).toBe(1);
+      expect(service.getSession(sessionId)).toBeUndefined();
+    });
+
+    it("should keep sessions younger than 4 hours", () => {
+      const { sessionId } = service.createSession("socket1", "Alice");
+
+      const cleaned = service.cleanupExpiredSessions();
+
+      expect(cleaned).toBe(0);
+      expect(service.getSession(sessionId)).toBeDefined();
+    });
+  });
 });

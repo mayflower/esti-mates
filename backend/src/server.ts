@@ -140,3 +140,13 @@ const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });
+
+// Cleanup expired sessions every 15 minutes
+const CLEANUP_INTERVAL_MS = 15 * 60 * 1000;
+
+setInterval(() => {
+  const cleaned = sessionService.cleanupExpiredSessions();
+  if (cleaned > 0) {
+    logger.info(`Cleaned up ${cleaned} expired sessions`);
+  }
+}, CLEANUP_INTERVAL_MS);
