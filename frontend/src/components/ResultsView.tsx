@@ -1,5 +1,6 @@
 // frontend/src/components/ResultsView.tsx
 import styled from "styled-components";
+import { FormattedMessage, useIntl } from 'react-intl';
 import { getEstimateLabel } from "../types/types";
 import type { EstimateValue } from "../types/types";
 
@@ -59,16 +60,17 @@ interface Props {
 }
 
 export function ResultsView({ estimates, average }: Props) {
+  const intl = useIntl();
   // Validate average
   const displayAverage = Number.isFinite(average) ? average.toFixed(1) : "N/A";
 
   // Handle empty estimates
   if (Object.keys(estimates).length === 0) {
     return (
-      <Container role="region" aria-label="Voting results">
-        <Title>Results</Title>
-        <Average role="status" aria-label="No votes yet">
-          No votes yet
+      <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
+        <Title><FormattedMessage id="results.title" /></Title>
+        <Average role="status" aria-label={intl.formatMessage({ id: 'results.noVotes' })}>
+          <FormattedMessage id="results.noVotes" />
         </Average>
       </Container>
     );
@@ -92,9 +94,9 @@ export function ResultsView({ estimates, average }: Props) {
   });
 
   return (
-    <Container role="region" aria-label="Voting results">
-      <Title>Results</Title>
-      <Average role="status" aria-label={`Average estimate: ${displayAverage} story points`}>
+    <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
+      <Title><FormattedMessage id="results.title" /></Title>
+      <Average role="status" aria-label={intl.formatMessage({ id: 'results.averageLabel' }, { value: displayAverage })}>
         {displayAverage}
       </Average>
 
@@ -103,7 +105,7 @@ export function ResultsView({ estimates, average }: Props) {
           <EstimateCard key={value}>
             <EstimateValueDisplay>{value}</EstimateValueDisplay>
             <EstimateCount>
-              {count} {count === 1 ? "vote" : "votes"}
+              <FormattedMessage id="results.voteCount" values={{ count }} />
             </EstimateCount>
           </EstimateCard>
         ))}
