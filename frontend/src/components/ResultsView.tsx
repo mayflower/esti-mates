@@ -41,7 +41,7 @@ const EstimateCard = styled.div`
   text-align: center;
 `;
 
-const EstimateValue = styled.div`
+const EstimateValueDisplay = styled.div`
   font-size: 2rem;
   font-weight: 700;
   color: ${(props) => props.theme.colors.text};
@@ -101,7 +101,7 @@ export function ResultsView({ estimates, average }: Props) {
       <EstimatesGrid>
         {sortedGroups.map(([value, count]) => (
           <EstimateCard key={value}>
-            <EstimateValue>{value}</EstimateValue>
+            <EstimateValueDisplay>{value}</EstimateValueDisplay>
             <EstimateCount>
               {count} {count === 1 ? "vote" : "votes"}
             </EstimateCount>

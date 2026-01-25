@@ -1,13 +1,14 @@
 // frontend/src/contexts/BrandingContext.tsx
-import React, { createContext, useContext, useMemo } from "react";
+import type React from "react";
+import { createContext, useContext, useMemo } from "react";
 import { ThemeProvider } from "styled-components";
-import { createTheme, type Theme } from "../styles/theme";
+import { type Theme, createTheme } from "../styles/theme";
 
 const BrandingContext = createContext<Theme | null>(null);
 
 export function BrandingProvider({ children }: { children: React.ReactNode }) {
   const primaryColor = import.meta.env.VITE_BRAND_PRIMARY_COLOR || "#1a73e8";
-  const theme = useMemo(() => createTheme(primaryColor), [primaryColor]);
+  const theme = useMemo(() => createTheme(primaryColor), []);
 
   return (
     <BrandingContext.Provider value={theme}>

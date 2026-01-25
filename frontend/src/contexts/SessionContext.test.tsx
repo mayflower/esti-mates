@@ -1,8 +1,8 @@
-// frontend/src/contexts/SessionContext.test.tsx
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
-import { SessionProvider, useSession } from "./SessionContext";
 import type { Socket } from "socket.io-client";
+// frontend/src/contexts/SessionContext.test.tsx
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { SessionProvider, useSession } from "./SessionContext";
 
 describe("SessionContext", () => {
   let mockSocket: Partial<Socket>;

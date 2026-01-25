@@ -1,6 +1,6 @@
-// frontend/src/hooks/useSocket.test.ts
-import { describe, it, expect, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
+// frontend/src/hooks/useSocket.test.ts
+import { describe, expect, it, vi } from "vitest";
 import { useSocket } from "./useSocket";
 
 // Mock socket.io-client

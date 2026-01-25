@@ -1,12 +1,12 @@
 // frontend/src/App.tsx
 import React from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import { useSocket } from "./hooks/useSocket";
-import { SessionProvider } from "./contexts/SessionContext";
-import { BrandingProvider } from "./contexts/BrandingContext";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
-import { SessionPage } from "./pages/SessionPage";
+import { BrandingProvider } from "./contexts/BrandingContext";
+import { SessionProvider } from "./contexts/SessionContext";
 import { useSession } from "./contexts/SessionContext";
+import { useSocket } from "./hooks/useSocket";
+import { SessionPage } from "./pages/SessionPage";
 
 function LandingPageWrapper() {
   const navigate = useNavigate();

@@ -82,10 +82,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join_session", (payload) => {
-    logger.info({
-      sessionId: payload.sessionId,
-      name: payload.name,
-    }, `join_session from ${socket.id}`);
+    logger.info(
+      {
+        sessionId: payload.sessionId,
+        name: payload.name,
+      },
+      `join_session from ${socket.id}`
+    );
 
     if (!payload.name || payload.name.trim() === "") {
       socket.emit("error", { message: "Name is required" });
@@ -132,17 +135,23 @@ io.on("connection", (socket) => {
 
   socket.on("transfer_moderator", (payload) => {
     if (!currentSessionId) return;
-    logger.info({
-      targetSocketId: payload.targetSocketId,
-    }, `transfer_moderator from ${socket.id}`);
+    logger.info(
+      {
+        targetSocketId: payload.targetSocketId,
+      },
+      `transfer_moderator from ${socket.id}`
+    );
     eventHandlers.handleTransferModerator(socket, currentSessionId, payload);
   });
 
   socket.on("toggle_observer", (payload) => {
     if (!currentSessionId) return;
-    logger.info({
-      targetSocketId: payload.targetSocketId,
-    }, `toggle_observer from ${socket.id}`);
+    logger.info(
+      {
+        targetSocketId: payload.targetSocketId,
+      },
+      `toggle_observer from ${socket.id}`
+    );
     eventHandlers.handleToggleObserver(socket, currentSessionId, payload);
   });
 

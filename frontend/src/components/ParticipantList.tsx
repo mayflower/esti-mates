@@ -1,7 +1,7 @@
 // frontend/src/components/ParticipantList.tsx
-import React from "react";
+import type React from "react";
 import styled from "styled-components";
-import type { Participant, EstimateValue } from "../types/types";
+import type { EstimateValue, Participant } from "../types/types";
 import { getEstimateLabel } from "../types/types";
 
 const Container = styled.div`

@@ -231,7 +231,8 @@ describe("SessionService", () => {
 
     it("should fail for invalid estimate value", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "socket1", 4 as any);
+      // @ts-expect-error Testing invalid input
+      const result = service.submitEstimate(sessionId, "socket1", 4);
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid estimate value");

@@ -1,13 +1,13 @@
 // frontend/src/pages/SessionPage.tsx
 import { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useSession } from "../contexts/SessionContext";
-import { ParticipantList } from "../components/ParticipantList";
 import { EstimationCards } from "../components/EstimationCards";
-import { ResultsView } from "../components/ResultsView";
 import { ModeratorControls } from "../components/ModeratorControls";
+import { ParticipantList } from "../components/ParticipantList";
+import { ResultsView } from "../components/ResultsView";
 import { useBranding } from "../contexts/BrandingContext";
+import { useSession } from "../contexts/SessionContext";
 import type { EstimateValue } from "../types/types";
 
 const Container = styled.div`
@@ -105,8 +105,7 @@ const Button = styled.button`
 export function SessionPage() {
   const { sessionId: urlSessionId } = useParams<{ sessionId: string }>();
   const location = useLocation();
-  const { name: nameFromState } =
-    (location.state as { name?: string }) || {};
+  const { name: nameFromState } = (location.state as { name?: string }) || {};
   const branding = useBranding();
   const {
     sessionId,

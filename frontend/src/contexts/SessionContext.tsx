@@ -1,5 +1,6 @@
 // frontend/src/contexts/SessionContext.tsx
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import type React from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 import type { Participant } from "../types/types";
 

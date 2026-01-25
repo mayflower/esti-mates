@@ -3,11 +3,23 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EventHandlers } from "./EventHandlers";
 import { SessionService } from "./SessionService";
 
+type MockSocket = {
+  id: string;
+  join: ReturnType<typeof vi.fn>;
+  emit: ReturnType<typeof vi.fn>;
+  to?: ReturnType<typeof vi.fn>;
+};
+
+type MockIo = {
+  to: ReturnType<typeof vi.fn>;
+  emit: ReturnType<typeof vi.fn>;
+};
+
 describe("EventHandlers", () => {
   let sessionService: SessionService;
   let handlers: EventHandlers;
-  let mockSocket: any;
-  let mockIo: any;
+  let mockSocket: MockSocket;
+  let mockIo: MockIo;
 
   beforeEach(() => {
     sessionService = new SessionService();
@@ -63,7 +75,7 @@ describe("EventHandlers", () => {
         to: vi.fn().mockReturnThis(),
       };
 
-      handlers.handleJoinSession(mockSocket2 as any, {
+      handlers.handleJoinSession(mockSocket2 as Socket, {
         sessionId,
         name: "Bob",
       });
