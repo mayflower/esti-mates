@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useBranding } from "../contexts/BrandingContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 const Container = styled.div`
   display: flex;
@@ -116,10 +117,11 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
   const [joinSessionId, setJoinSessionId] = useState("");
   const navigate = useNavigate();
   const branding = useBranding();
+  const { dialog } = useNotification();
 
   const handleCreate = () => {
     if (!createName.trim()) {
-      alert("Please enter your name");
+      dialog.error("Please enter your name");
       return;
     }
     onCreateSession(createName.trim());
@@ -127,7 +129,7 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
 
   const handleJoin = () => {
     if (!joinSessionId.trim()) {
-      alert("Please enter a session ID");
+      dialog.error("Please enter a session ID");
       return;
     }
     // No name validation here!

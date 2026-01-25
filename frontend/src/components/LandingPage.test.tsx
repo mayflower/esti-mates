@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 // frontend/src/components/LandingPage.test.tsx
 import { describe, expect, it, vi } from "vitest";
 import { BrandingProvider } from "../contexts/BrandingContext";
+import { NotificationProvider } from "../contexts/NotificationContext";
 import { LandingPage } from "./LandingPage";
 
 // Mock useNavigate
@@ -25,7 +26,9 @@ function renderLandingPage(props = {}) {
     ...render(
       <BrowserRouter>
         <BrandingProvider>
-          <LandingPage {...defaultProps} />
+          <NotificationProvider>
+            <LandingPage {...defaultProps} />
+          </NotificationProvider>
         </BrandingProvider>
       </BrowserRouter>
     ),
