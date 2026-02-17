@@ -30,6 +30,13 @@ const Card = styled.button<{ $selected: boolean }>`
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    padding: ${(props) => props.theme.spacing.md};
+    font-size: 1.5rem;
+    min-width: 70px;
+    min-height: 80px;
+  }
 `;
 
 interface Props {

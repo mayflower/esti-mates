@@ -26,6 +26,11 @@ const LanguageSwitcherWrapper = styled.div`
 const Logo = styled.img`
   height: 80px;
   margin-bottom: ${(props) => props.theme.spacing.xl};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    height: 50px;
+    margin-bottom: ${(props) => props.theme.spacing.md};
+  }
 `;
 
 const Title = styled.h1`
@@ -33,6 +38,11 @@ const Title = styled.h1`
   margin-bottom: ${(props) => props.theme.spacing.xl};
   font-size: 2.5rem;
   text-align: center;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1.75rem;
+    margin-bottom: ${(props) => props.theme.spacing.md};
+  }
 `;
 
 const Card = styled.div`
@@ -42,6 +52,11 @@ const Card = styled.div`
   padding: ${(props) => props.theme.spacing.xl};
   width: 100%;
   max-width: 500px;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    padding: ${(props) => props.theme.spacing.md};
+    max-width: calc(100% - 2rem);
+  }
 `;
 
 const Input = styled.input`
@@ -92,6 +107,13 @@ const Divider = styled.div`
   display: flex;
   align-items: center;
   margin: ${(props) => props.theme.spacing.lg} 0;
+  width: 100%;
+  max-width: 500px;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    margin: ${(props) => props.theme.spacing.md} 0;
+    max-width: calc(100% - 2rem);
+  }
   color: ${(props) => props.theme.colors.textSecondary};
 
   &::before,

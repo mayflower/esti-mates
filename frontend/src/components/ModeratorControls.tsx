@@ -16,7 +16,7 @@ const Container = styled.div`
   gap: ${(props) => props.theme.spacing.md};
   box-shadow: ${(props) => props.theme.shadows.lg};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
     gap: ${(props) => props.theme.spacing.sm};
   }
@@ -48,8 +48,9 @@ const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
     cursor: not-allowed;
   }
 
-  @media (max-width: 768px) {
-    min-width: 120px;
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    min-width: unset;
+    flex: 1;
     font-size: 0.9rem;
     padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
   }

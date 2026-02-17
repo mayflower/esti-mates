@@ -11,6 +11,12 @@ const Grid = styled.div`
   padding: ${(props) => props.theme.spacing.lg};
   max-width: 800px;
   margin: 0 auto;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: ${(props) => props.theme.spacing.sm};
+    padding: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const Message = styled.div`

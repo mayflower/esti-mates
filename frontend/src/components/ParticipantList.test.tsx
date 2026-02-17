@@ -41,6 +41,9 @@ const theme = {
     md: "0 4px 6px rgba(0,0,0,0.16)",
     lg: "0 10px 20px rgba(0,0,0,0.19)",
   },
+  breakpoints: {
+    mobile: "768px",
+  },
 };
 
 function renderParticipantList(props: Partial<Parameters<typeof ParticipantList>[0]> = {}) {

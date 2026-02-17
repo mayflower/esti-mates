@@ -16,6 +16,10 @@ import type { EstimateValue } from "../types/types";
 const Container = styled.div`
   display: flex;
   height: 100vh;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    flex-direction: column;
+  }
 `;
 
 const MainArea = styled.div`
@@ -32,17 +36,29 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
+  }
 `;
 
 const Logo = styled.img`
   height: 40px;
   cursor: pointer;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    height: 28px;
+  }
 `;
 
 const SessionInfo = styled.div`
   display: flex;
   align-items: center;
   gap: ${(props) => props.theme.spacing.lg};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    gap: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const SessionId = styled.div`
@@ -56,6 +72,10 @@ const SessionId = styled.div`
   &:hover {
     opacity: 0.8;
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1.1rem;
+  }
 `;
 
 const Content = styled.div`
@@ -64,6 +84,10 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    padding: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const JoinPrompt = styled.div`
@@ -121,6 +145,54 @@ const ObserverToggleButton = styled.button<{ $isObserver: boolean }>`
   &:hover {
     opacity: 0.8;
   }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 0.8rem;
+    padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.sm};
+  }
+`;
+
+const ParticipantToggle = styled.button`
+  display: none;
+  background: ${(props) => props.theme.colors.surface};
+  border: 1px solid ${(props) => props.theme.colors.border};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.sm};
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: ${(props) => props.theme.colors.text};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: flex;
+    align-items: center;
+    gap: ${(props) => props.theme.spacing.xs};
+  }
+`;
+
+const ParticipantOverlay = styled.div<{ $visible: boolean }>`
+  display: none;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: ${(props) => (props.$visible ? "block" : "none")};
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.5);
+  }
+`;
+
+const ParticipantDrawer = styled.div<{ $open: boolean }>`
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 80vw;
+    max-width: 300px;
+    z-index: 201;
+    transform: translateX(${(props) => (props.$open ? "0" : "-100%")});
+    transition: transform 0.3s ease;
+  }
 `;
 
 export function SessionPage() {
@@ -150,6 +222,7 @@ export function SessionPage() {
 
   const [name, setName] = useState("");
   const [joined, setJoined] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
 
   useEffect(() => {
     if (sessionId) {
@@ -223,20 +296,27 @@ export function SessionPage() {
 
   return (
     <Container>
-      <ParticipantList
-        participants={participants}
-        revealed={roundRevealed}
-        revealedEstimates={revealedEstimates as Record<string, EstimateValue> | null}
-        currentSocketId={currentSocketId}
-        isModerator={isModerator}
-        onToggleObserver={toggleObserver}
-        onTransferModerator={transferModerator}
-      />
+      <ParticipantOverlay $visible={showParticipants} onClick={() => setShowParticipants(false)} />
+      <ParticipantDrawer $open={showParticipants}>
+        <ParticipantList
+          participants={participants}
+          revealed={roundRevealed}
+          revealedEstimates={revealedEstimates as Record<string, EstimateValue> | null}
+          currentSocketId={currentSocketId}
+          isModerator={isModerator}
+          onToggleObserver={toggleObserver}
+          onTransferModerator={transferModerator}
+          onClose={() => setShowParticipants(false)}
+        />
+      </ParticipantDrawer>
 
       <MainArea>
         <Header>
           {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
           <SessionInfo>
+            <ParticipantToggle onClick={() => setShowParticipants(true)}>
+              👥 {participants.length}
+            </ParticipantToggle>
             <LanguageSwitcher />
             <SessionId onClick={handleCopySessionId} title={intl.formatMessage({ id: "session.clickToCopy" })}>
               {sessionId}

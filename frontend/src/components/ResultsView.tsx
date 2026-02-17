@@ -11,6 +11,11 @@ const Container = styled.div`
   padding: ${(props) => props.theme.spacing.xl};
   max-width: 800px;
   margin: ${(props) => props.theme.spacing.lg} auto 0;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    padding: ${(props) => props.theme.spacing.md};
+    margin-top: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const Title = styled.h2`
@@ -18,6 +23,11 @@ const Title = styled.h2`
   color: ${(props) => props.theme.colors.text};
   margin-bottom: ${(props) => props.theme.spacing.lg};
   text-align: center;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1.3rem;
+    margin-bottom: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const Average = styled.div`
@@ -26,6 +36,11 @@ const Average = styled.div`
   color: ${(props) => props.theme.colors.primary};
   text-align: center;
   margin-bottom: ${(props) => props.theme.spacing.lg};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 2rem;
+    margin-bottom: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const EstimatesGrid = styled.div`
@@ -33,6 +48,12 @@ const EstimatesGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: ${(props) => props.theme.spacing.md};
   margin-top: ${(props) => props.theme.spacing.lg};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: ${(props) => props.theme.spacing.sm};
+    margin-top: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const EstimateCard = styled.div`
@@ -47,6 +68,10 @@ const EstimateValueDisplay = styled.div`
   font-weight: 700;
   color: ${(props) => props.theme.colors.text};
   margin-bottom: ${(props) => props.theme.spacing.xs};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    font-size: 1.5rem;
+  }
 `;
 
 const EstimateCount = styled.div`

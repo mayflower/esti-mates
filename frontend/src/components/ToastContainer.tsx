@@ -11,7 +11,7 @@ const StyledViewport = styled(RadixToast.Viewport)`
   flex-direction: column;
   gap: 0.5rem;
   width: 390px;
-  max-width: 100%;
+  max-width: calc(100vw - 2rem);
   z-index: 50;
   outline: none;
 `;

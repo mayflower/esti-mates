@@ -13,6 +13,27 @@ const Container = styled.div`
   max-width: 300px;
   height: 100vh;
   overflow-y: auto;
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    border-right: none;
+  }
+`;
+
+const CloseButton = styled.button`
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: ${(props) => props.theme.colors.text};
+  padding: ${(props) => props.theme.spacing.xs};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
+    display: block;
+  }
 `;
 
 const Title = styled.h2`
@@ -86,6 +107,7 @@ interface Props {
   isModerator: boolean;
   onToggleObserver: (targetSocketId?: string) => void;
   onTransferModerator: (targetSocketId: string) => void;
+  onClose?: () => void;
 }
 
 export function ParticipantList({
@@ -96,6 +118,7 @@ export function ParticipantList({
   isModerator,
   onToggleObserver,
   onTransferModerator,
+  onClose,
 }: Props) {
   const intl = useIntl();
 
@@ -145,9 +168,12 @@ export function ParticipantList({
 
   return (
     <Container role="region" aria-label={intl.formatMessage({ id: "participants.regionLabel" })}>
-      <Title>
-        <FormattedMessage id="participants.title" values={{ count: participants.length }} />
-      </Title>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Title>
+          <FormattedMessage id="participants.title" values={{ count: participants.length }} />
+        </Title>
+        {onClose && <CloseButton onClick={onClose}>✕</CloseButton>}
+      </div>
 
       {participants.map((participant) => {
         const isCurrentUser = participant.socketId === currentSocketId;
