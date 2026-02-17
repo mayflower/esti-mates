@@ -3,10 +3,10 @@ FROM node:20-slim AS frontend-builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json ./
 COPY frontend/package*.json ./frontend/
 
-RUN npm install --workspace=frontend
+RUN cd frontend && npm install
 
 COPY frontend ./frontend
 
