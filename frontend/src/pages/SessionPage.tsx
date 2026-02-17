@@ -186,7 +186,7 @@ export function SessionPage() {
     if (!sessionId) return;
 
     try {
-      await navigator.clipboard.writeText(sessionId);
+      await navigator.clipboard.writeText(`${window.location.origin}/session/${sessionId}`);
       toast.success(intl.formatMessage({ id: "session.sessionIdCopied" }));
     } catch (error) {
       console.error("Failed to copy:", error);
