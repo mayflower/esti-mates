@@ -9,7 +9,7 @@ spec:
       images:
         {{- range $name, $img := .Values.images }}
         - alias: {{ $name }}
-          imageName: {{ $img.image | quote }}
+          imageName: "{{ $img.image }}:{{ $img.tag }}"
           commonUpdateSettings:
             updateStrategy: digest
           manifestTargets:
