@@ -5,7 +5,7 @@ domain: estimates.data.mayflower.zone
 images:
   app:
     image: ghcr.io/mayflower/esti-mates/mf-estimates
-    tag: "latest"
+    tag: latest # managed by argocd-image-updater
 
 config:
   BRAND_NAME: "Mayflower GmbH"
