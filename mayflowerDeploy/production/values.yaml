@@ -1,10 +1,13 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mf-estimates-config
-  labels:
-    app: mf-estimates
-data:
+environment: production
+
+domain: estimates.data.mayflower.zone
+
+images:
+  app:
+    image: ghcr.io/mayflower/esti-mates/mf-estimates
+    tag: "latest"
+
+config:
   BRAND_NAME: "Mayflower GmbH"
   BRAND_LOGO_URL: "/assets/mayflower-logo.svg"
   BRAND_PRIMARY_COLOR: "#1a73e8"
