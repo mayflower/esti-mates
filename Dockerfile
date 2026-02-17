@@ -1,45 +1,31 @@
-# Stage 1: Build frontend
-FROM node:20-alpine AS frontend-builder
-
-WORKDIR /app
-
-COPY package*.json ./
-COPY frontend/package*.json ./frontend/
-
-RUN npm install --workspace=frontend
-
-COPY frontend ./frontend
-COPY biome.json ./
-
-RUN npm run build --workspace=frontend
-
-# Stage 2: Build backend
-FROM node:20-alpine AS backend-builder
+# Stage 1: Build backend
+FROM node:20-slim AS backend-builder
 
 WORKDIR /app
 
 COPY package*.json ./
 COPY backend/package*.json ./backend/
 
-RUN npm install --workspace=backend --production=false
+RUN npm ci --workspace=backend --production=false
 
 COPY backend ./backend
 COPY biome.json ./
 
 RUN npm run build --workspace=backend
 
-# Stage 3: Production image
-FROM node:20-alpine
+# Stage 2: Production image
+FROM node:20-slim
 
 WORKDIR /app
 
 COPY package*.json ./
 COPY backend/package*.json ./backend/
 
-RUN npm install --workspace=backend --production
+RUN npm ci --workspace=backend --production
 
 COPY --from=backend-builder /app/backend/dist ./backend/dist
-COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+# Copy locally built frontend dist
+COPY frontend/dist ./frontend/dist
 
 ENV NODE_ENV=production
 ENV PORT=3001
