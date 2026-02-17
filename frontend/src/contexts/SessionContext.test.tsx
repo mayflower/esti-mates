@@ -7,7 +7,7 @@ import { createTheme } from "../styles/theme";
 import { NotificationProvider } from "./NotificationContext";
 import { SessionProvider, useSession } from "./SessionContext";
 
-const theme = createTheme('#1a73e8');
+const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
 
 describe("SessionContext", () => {
   let mockSocket: Partial<Socket>;

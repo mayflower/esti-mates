@@ -1,4 +1,5 @@
-// frontend/src/styles/theme.ts
+import type { AppConfig } from "../hooks/useConfig";
+
 export interface Theme {
   brandName: string;
   brandLogoUrl: string;
@@ -36,15 +37,15 @@ export interface Theme {
   };
 }
 
-export function createTheme(primaryColor: string): Theme {
+export function createTheme(config: AppConfig): Theme {
   return {
-    brandName: import.meta.env.VITE_BRAND_NAME || "Mayflower GmbH",
-    brandLogoUrl: import.meta.env.VITE_BRAND_LOGO_URL || "/assets/logo.svg",
-    brandPrimaryColor: primaryColor,
-    brandFooterText: import.meta.env.VITE_BRAND_FOOTER_TEXT || "Part of Mayflower Agile Tools",
+    brandName: config.brandName,
+    brandLogoUrl: config.brandLogoUrl,
+    brandPrimaryColor: config.brandPrimaryColor,
+    brandFooterText: config.brandFooterText,
     colors: {
-      primary: primaryColor,
-      primaryHover: darkenColor(primaryColor, 10),
+      primary: config.brandPrimaryColor,
+      primaryHover: darkenColor(config.brandPrimaryColor, 10),
       background: "#f5f5f5",
       surface: "#ffffff",
       text: "#212121",

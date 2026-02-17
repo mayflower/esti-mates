@@ -6,7 +6,7 @@ import { AppIntlProvider } from '../i18n';
 import { DialogContainer } from './DialogContainer';
 import { Dialog as DialogType } from '../contexts/NotificationContext';
 
-const theme = createTheme('#1a73e8');
+const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (

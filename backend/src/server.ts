@@ -36,6 +36,16 @@ const io = new Server(httpServer, {
 const sessionService = new SessionService();
 const eventHandlers = new EventHandlers(sessionService, io);
 
+// Runtime configuration for frontend
+app.get("/api/config", (_req, res) => {
+  res.json({
+    brandName: process.env.BRAND_NAME || "Mayflower GmbH",
+    brandLogoUrl: process.env.BRAND_LOGO_URL || "/assets/logo.svg",
+    brandPrimaryColor: process.env.BRAND_PRIMARY_COLOR || "#1a73e8",
+    brandFooterText: process.env.BRAND_FOOTER_TEXT || "Part of Mayflower Agile Tools",
+  });
+});
+
 // Health check
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });

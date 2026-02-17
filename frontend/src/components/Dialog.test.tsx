@@ -5,7 +5,7 @@ import { createTheme } from '../styles/theme';
 import { AppIntlProvider } from '../i18n';
 import { Dialog } from './Dialog';
 
-const theme = createTheme('#1a73e8');
+const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
