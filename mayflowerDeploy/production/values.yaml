@@ -1,6 +1,6 @@
 environment: production
 
-domain: estimates.data.mayflower.zone
+domain: estimates.data.mayflower.tech
 
 images:
   app:
