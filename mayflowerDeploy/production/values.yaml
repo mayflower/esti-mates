@@ -9,6 +9,6 @@ images:
 
 config:
   BRAND_NAME: "Mayflower GmbH"
-  BRAND_LOGO_URL: "/assets/mayflower-logo.svg"
+  BRAND_LOGO_URL: "/assets/logo.svg"
   BRAND_PRIMARY_COLOR: "#1a73e8"
   BRAND_FOOTER_TEXT: "Part of Mayflower Agile Tools"
