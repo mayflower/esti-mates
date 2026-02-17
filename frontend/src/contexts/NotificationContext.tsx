@@ -52,7 +52,7 @@ interface NotificationProviderProps {
 export function NotificationProvider({ children }: NotificationProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [currentDialog, setCurrentDialog] = useState<Dialog | null>(null);
-  const timeoutsRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const timeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   // Cleanup all timeouts on unmount
   useEffect(() => {
