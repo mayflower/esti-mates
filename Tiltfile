@@ -2,7 +2,7 @@
 
 # Build Docker image
 docker_build(
-    'mf-estimates:latest',
+    'mf-estimates-dev',
     '.',
     dockerfile='Dockerfile',
     # Live reload: rebuild on file changes
@@ -16,12 +16,17 @@ docker_build(
     ],
 )
 
-# Apply Kubernetes manifests
-k8s_yaml([
-    'k8s/configmap.yaml',
-    'k8s/deployment.yaml',
-    'k8s/service.yaml',
-])
+# Render Helm chart with local dev overrides
+k8s_yaml(helm(
+    'mayflowerDeploy/production',
+    name='mf-estimates',
+    values=['mayflowerDeploy/production/values.yaml'],
+    set=[
+        'images.app.image=mf-estimates-dev',
+        'images.app.tag=latest',
+        'domain=',  # disable ingress locally
+    ],
+))
 
 # Define the resource
 k8s_resource(
@@ -43,7 +48,6 @@ print("""
 ╟───────────────────────────────────────────────────────────╢
 ║  Application: http://localhost:3000                      ║
 ║  Health:      http://localhost:3000/health               ║
-║  Metrics:     http://localhost:3000/metrics              ║
 ║                                                           ║
 ║  Press 'space' in terminal to open Tilt UI in browser    ║
 ╚═══════════════════════════════════════════════════════════╝
