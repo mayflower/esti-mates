@@ -85,7 +85,6 @@ export class EventHandlers {
 
     this.io.to(sessionId).emit("cards_revealed", {
       estimates: estimatesObj,
-      average: result.average,
     });
   }
 

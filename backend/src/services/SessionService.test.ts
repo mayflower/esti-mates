@@ -305,7 +305,7 @@ describe("SessionService", () => {
   });
 
   describe("revealCards", () => {
-    it("should reveal all estimates and calculate average", () => {
+    it("should reveal all estimates", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
       service.joinSession(sessionId, "socket3", "Charlie");
@@ -318,23 +318,9 @@ describe("SessionService", () => {
 
       expect(result.success).toBe(true);
       expect(result.estimates?.size).toBe(3);
-      expect(result.average).toBe((5 + 8 + 13) / 3);
 
       const session = service.getSession(sessionId);
       expect(session?.currentRound.revealed).toBe(true);
-    });
-
-    it("should exclude ? (-1) from average calculation", () => {
-      const { sessionId } = service.createSession("socket1", "Alice");
-      service.joinSession(sessionId, "socket2", "Bob");
-
-      service.submitEstimate(sessionId, "socket1", 5);
-      service.submitEstimate(sessionId, "socket2", -1); // ? card
-
-      const result = service.revealCards(sessionId, "socket1");
-
-      expect(result.success).toBe(true);
-      expect(result.average).toBe(5); // Only 5 counted
     });
 
     it("should fail if not moderator", () => {
@@ -377,7 +363,7 @@ describe("SessionService", () => {
       expect(result.error).toBe("Invalid moderator socket ID");
     });
 
-    it("should return average of 0 when all estimates are ?", () => {
+    it("should reveal estimates when all are ?", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
 
@@ -387,7 +373,7 @@ describe("SessionService", () => {
       const result = service.revealCards(sessionId, "socket1");
 
       expect(result.success).toBe(true);
-      expect(result.average).toBe(0);
+      expect(result.estimates?.size).toBe(2);
     });
   });
 

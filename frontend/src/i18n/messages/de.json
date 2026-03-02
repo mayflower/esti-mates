@@ -47,7 +47,6 @@
   "results.title": "Ergebnis",
   "results.regionLabel": "Abstimmungsergebnis",
   "results.noVotes": "Noch keine Stimmen",
-  "results.averageLabel": "Durchschnittliche Schätzung: {value} Story Points",
   "results.voteCount": "{count, plural, one {# Stimme} other {# Stimmen}}",
 
   "dialog.error": "Fehler",

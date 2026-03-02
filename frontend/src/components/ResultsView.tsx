@@ -30,19 +30,6 @@ const Title = styled.h2`
   }
 `;
 
-const Average = styled.div`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${(props) => props.theme.colors.primary};
-  text-align: center;
-  margin-bottom: ${(props) => props.theme.spacing.lg};
-
-  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
-    font-size: 2rem;
-    margin-bottom: ${(props) => props.theme.spacing.sm};
-  }
-`;
-
 const EstimatesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -81,22 +68,17 @@ const EstimateCount = styled.div`
 
 interface Props {
   estimates: Record<string, EstimateValue>;
-  average: number;
 }
 
-export function ResultsView({ estimates, average }: Props) {
+export function ResultsView({ estimates }: Props) {
   const intl = useIntl();
-  // Validate average
-  const displayAverage = Number.isFinite(average) ? average.toFixed(1) : "N/A";
 
   // Handle empty estimates
   if (Object.keys(estimates).length === 0) {
     return (
       <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
         <Title><FormattedMessage id="results.title" /></Title>
-        <Average role="status" aria-label={intl.formatMessage({ id: 'results.noVotes' })}>
-          <FormattedMessage id="results.noVotes" />
-        </Average>
+        <p role="status"><FormattedMessage id="results.noVotes" /></p>
       </Container>
     );
   }
@@ -121,9 +103,6 @@ export function ResultsView({ estimates, average }: Props) {
   return (
     <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
       <Title><FormattedMessage id="results.title" /></Title>
-      <Average role="status" aria-label={intl.formatMessage({ id: 'results.averageLabel' }, { value: displayAverage })}>
-        {displayAverage}
-      </Average>
 
       <EstimatesGrid>
         {sortedGroups.map(([value, count]) => (

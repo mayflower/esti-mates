@@ -210,7 +210,6 @@ export function SessionPage() {
     currentEstimate,
     roundRevealed,
     revealedEstimates,
-    average,
     currentSocketId,
     joinSession,
     submitEstimate,
@@ -345,10 +344,9 @@ export function SessionPage() {
             />
           )}
 
-          {roundRevealed && revealedEstimates && average !== null && (
+          {roundRevealed && revealedEstimates && (
             <ResultsView
               estimates={revealedEstimates as Record<string, EstimateValue>}
-              average={average}
             />
           )}
         </Content>

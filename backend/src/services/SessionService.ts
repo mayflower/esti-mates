@@ -154,7 +154,6 @@ export class SessionService {
     success: boolean;
     error?: string;
     estimates?: Map<string, EstimateValue>;
-    average?: number;
   } {
     if (!sessionId?.trim()) {
       return { success: false, error: "Invalid session ID" };
@@ -176,20 +175,9 @@ export class SessionService {
     session.currentRound.revealed = true;
     session.lastActivity = new Date();
 
-    // Calculate average (exclude -1 which represents "?")
-    const validEstimates = Array.from(session.currentRound.estimates.values()).filter(
-      (e) => e !== -1
-    );
-
-    const average =
-      validEstimates.length > 0
-        ? validEstimates.reduce((sum, val) => sum + val, 0) / validEstimates.length
-        : 0;
-
     return {
       success: true,
       estimates: session.currentRound.estimates,
-      average,
     };
   }
 

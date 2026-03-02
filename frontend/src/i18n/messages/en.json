@@ -47,7 +47,6 @@
   "results.title": "Results",
   "results.regionLabel": "Voting results",
   "results.noVotes": "No votes yet",
-  "results.averageLabel": "Average estimate: {value} story points",
   "results.voteCount": "{count, plural, one {# vote} other {# votes}}",
 
   "dialog.error": "Error",

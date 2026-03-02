@@ -12,7 +12,6 @@ interface SessionState {
   currentEstimate: number | null;
   roundRevealed: boolean;
   revealedEstimates: Record<string, number> | null;
-  average: number | null;
   currentSocketId: string | null;
 }
 
@@ -42,7 +41,6 @@ export function SessionProvider({ children, socket }: Props) {
     currentEstimate: null,
     roundRevealed: false,
     revealedEstimates: null,
-    average: null,
     currentSocketId: socket?.id || null,
   });
 
@@ -100,7 +98,6 @@ export function SessionProvider({ children, socket }: Props) {
         ...prev,
         roundRevealed: true,
         revealedEstimates: data.estimates,
-        average: data.average,
       }));
     });
 
@@ -110,7 +107,6 @@ export function SessionProvider({ children, socket }: Props) {
         currentEstimate: null,
         roundRevealed: false,
         revealedEstimates: null,
-        average: null,
         participants: prev.participants.map((p) => ({ ...p, currentEstimate: null })),
       }));
     });
