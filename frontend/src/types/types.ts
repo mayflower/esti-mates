@@ -35,6 +35,3 @@ export interface Participant {
   currentEstimate: EstimateValue | null;
 }
 
-export function getEstimateLabel(value: EstimateValue): string {
-  return value;
-}
