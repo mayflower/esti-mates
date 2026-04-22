@@ -84,7 +84,7 @@ describe("ParticipantList", () => {
       name: "Bob",
       isModerator: false,
       isObserver: false,
-      currentEstimate: 5,
+      currentEstimate: "5",
     },
     {
       socketId: "socket3",
@@ -227,7 +227,7 @@ describe("ParticipantList", () => {
   describe("Revealed Estimates", () => {
     it("should show estimate values when revealed", () => {
       const revealedEstimates: Record<string, EstimateValue> = {
-        socket2: 5 as EstimateValue, // Bob's estimate
+        socket2: "5", // Bob's estimate
       };
 
       renderParticipantList({
@@ -243,7 +243,7 @@ describe("ParticipantList", () => {
 
     it("should show observer indicator even when revealed", () => {
       const revealedEstimates: Record<string, EstimateValue> = {
-        socket2: 5 as EstimateValue,
+        socket2: "5",
       };
 
       renderParticipantList({

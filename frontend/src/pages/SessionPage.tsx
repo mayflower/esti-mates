@@ -211,6 +211,7 @@ export function SessionPage() {
     roundRevealed,
     revealedEstimates,
     currentSocketId,
+    cardDeck,
     joinSession,
     submitEstimate,
     revealCards,
@@ -346,7 +347,8 @@ export function SessionPage() {
 
           {roundRevealed && revealedEstimates && (
             <ResultsView
-              estimates={revealedEstimates as Record<string, EstimateValue>}
+              estimates={revealedEstimates}
+              cardDeck={cardDeck}
             />
           )}
         </Content>

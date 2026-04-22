@@ -1,8 +1,8 @@
 // frontend/src/components/ResultsView.tsx
 import styled from "styled-components";
 import { FormattedMessage, useIntl } from 'react-intl';
-import { getEstimateLabel } from "../types/types";
-import type { EstimateValue } from "../types/types";
+import { sortEstimateValues } from "../types/types";
+import type { CardDeck } from "../types/types";
 
 const Container = styled.div`
   background: ${(props) => props.theme.colors.surface};
@@ -67,10 +67,11 @@ const EstimateCount = styled.div`
 `;
 
 interface Props {
-  estimates: Record<string, EstimateValue>;
+  estimates: Record<string, string>;
+  cardDeck: CardDeck;
 }
 
-export function ResultsView({ estimates }: Props) {
+export function ResultsView({ estimates, cardDeck }: Props) {
   const intl = useIntl();
 
   // Handle empty estimates
@@ -86,19 +87,15 @@ export function ResultsView({ estimates }: Props) {
   // Group estimates by value
   const groupedEstimates = Object.values(estimates).reduce(
     (acc, value) => {
-      const label = getEstimateLabel(value);
-      acc[label] = (acc[label] || 0) + 1;
+      acc[value] = (acc[value] || 0) + 1;
       return acc;
     },
     {} as Record<string, number>
   );
 
-  // Sort by estimate value
-  const sortedGroups = Object.entries(groupedEstimates).sort(([a], [b]) => {
-    if (a === "?") return 1;
-    if (b === "?") return -1;
-    return Number(a) - Number(b);
-  });
+  // Sort by estimate value using deck order
+  const sortedKeys = sortEstimateValues(Object.keys(groupedEstimates), cardDeck);
+  const sortedGroups = sortedKeys.map((key) => [key, groupedEstimates[key]] as [string, number]);
 
   return (
     <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
