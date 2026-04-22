@@ -2,23 +2,24 @@
 import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
-import type { Participant } from "../types/types";
+import type { CardDeck, Participant } from "../types/types";
 import { useNotification } from "./NotificationContext";
 
 interface SessionState {
   sessionId: string | null;
   participants: Participant[];
   isModerator: boolean;
-  currentEstimate: number | null;
+  cardDeck: CardDeck;
+  currentEstimate: string | null;
   roundRevealed: boolean;
-  revealedEstimates: Record<string, number> | null;
+  revealedEstimates: Record<string, string> | null;
   currentSocketId: string | null;
 }
 
 interface SessionContextType extends SessionState {
-  createSession: (name: string) => void;
+  createSession: (name: string, cardDeck: CardDeck) => void;
   joinSession: (sessionId: string, name: string) => void;
-  submitEstimate: (estimate: number) => void;
+  submitEstimate: (estimate: string) => void;
   revealCards: () => void;
   newRound: () => void;
   transferModerator: (targetSocketId: string) => void;
@@ -38,6 +39,7 @@ export function SessionProvider({ children, socket }: Props) {
     sessionId: null,
     participants: [],
     isModerator: false,
+    cardDeck: "fibonacci",
     currentEstimate: null,
     roundRevealed: false,
     revealedEstimates: null,
@@ -59,6 +61,7 @@ export function SessionProvider({ children, socket }: Props) {
         sessionId: data.sessionId,
         participants: [data.moderator],
         isModerator: true,
+        cardDeck: data.cardDeck ?? "fibonacci",
       }));
     });
 
@@ -67,6 +70,7 @@ export function SessionProvider({ children, socket }: Props) {
         ...prev,
         participants: data.participants,
         isModerator: data.isModerator,
+        cardDeck: data.cardDeck ?? "fibonacci",
       }));
     });
 
@@ -88,7 +92,7 @@ export function SessionProvider({ children, socket }: Props) {
       setState((prev) => ({
         ...prev,
         participants: prev.participants.map((p) =>
-          p.socketId === data.socketId ? { ...p, currentEstimate: -999 } : p
+          p.socketId === data.socketId ? { ...p, currentEstimate: "__voted__" } : p
         ),
       }));
     });
@@ -152,9 +156,9 @@ export function SessionProvider({ children, socket }: Props) {
 
   // Actions
   const createSession = useCallback(
-    (name: string) => {
+    (name: string, cardDeck: CardDeck) => {
       if (!socket) return;
-      socket.emit("create_session", { name });
+      socket.emit("create_session", { name, cardDeck });
     },
     [socket]
   );
@@ -169,7 +173,7 @@ export function SessionProvider({ children, socket }: Props) {
   );
 
   const submitEstimate = useCallback(
-    (estimate: number) => {
+    (estimate: string) => {
       if (!socket) return;
       socket.emit("submit_estimate", { estimate });
       setState((prev) => ({ ...prev, currentEstimate: estimate }));
