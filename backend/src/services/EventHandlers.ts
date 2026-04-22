@@ -78,7 +78,7 @@ export class EventHandlers {
     }
 
     // Convert Map to object for JSON serialization
-    const estimatesObj: Record<string, number> = {};
+    const estimatesObj: Record<string, string> = {};
     result.estimates?.forEach((value, key) => {
       estimatesObj[key] = value;
     });
