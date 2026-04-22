@@ -9,6 +9,7 @@ import { SessionProvider } from "./contexts/SessionContext";
 import { useSession } from "./contexts/SessionContext";
 import { useSocket } from "./hooks/useSocket";
 import { AppIntlProvider } from './i18n';
+import type { CardDeck } from "./types/types";
 import { SessionPage } from "./pages/SessionPage";
 
 function LandingPageWrapper() {
@@ -16,9 +17,9 @@ function LandingPageWrapper() {
   const { createSession, sessionId } = useSession();
   const [creatorName, setCreatorName] = React.useState<string | null>(null);
 
-  const handleCreateSession = (name: string) => {
+  const handleCreateSession = (name: string, cardDeck: CardDeck) => {
     setCreatorName(name);
-    createSession(name);
+    createSession(name, cardDeck);
   };
 
   // Navigate when session is created, passing name via state
