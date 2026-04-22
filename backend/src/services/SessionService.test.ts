@@ -189,15 +189,15 @@ describe("SessionService", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
 
-      const result = service.submitEstimate(sessionId, "socket2", 5);
+      const result = service.submitEstimate(sessionId, "socket2", "5");
 
       expect(result.success).toBe(true);
       const session = service.getSession(sessionId);
-      expect(session?.currentRound.estimates.get("socket2")).toBe(5);
+      expect(session?.currentRound.estimates.get("socket2")).toBe("5");
     });
 
     it("should fail if session not found", () => {
-      const result = service.submitEstimate("INVALID", "socket1", 3);
+      const result = service.submitEstimate("INVALID", "socket1", "3");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Session not found");
@@ -205,7 +205,7 @@ describe("SessionService", () => {
 
     it("should fail if participant not in session", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "unknownSocket", 8);
+      const result = service.submitEstimate(sessionId, "unknownSocket", "8");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Participant not found");
@@ -213,10 +213,10 @@ describe("SessionService", () => {
 
     it("should fail if round already revealed", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      service.submitEstimate(sessionId, "socket1", 3);
+      service.submitEstimate(sessionId, "socket1", "3");
       service.revealCards(sessionId, "socket1");
 
-      const result = service.submitEstimate(sessionId, "socket1", 5);
+      const result = service.submitEstimate(sessionId, "socket1", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Round already revealed");
@@ -227,21 +227,21 @@ describe("SessionService", () => {
       service.joinSession(sessionId, "socket2", "Bob");
       service.toggleObserver(sessionId, "socket1", "socket2");
 
-      const result = service.submitEstimate(sessionId, "socket2", 5);
+      const result = service.submitEstimate(sessionId, "socket2", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Observers cannot estimate");
     });
 
     it("should fail for empty sessionId", () => {
-      const result = service.submitEstimate("", "socket1", 5);
+      const result = service.submitEstimate("", "socket1", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid session ID");
     });
 
     it("should fail for whitespace-only sessionId", () => {
-      const result = service.submitEstimate("   ", "socket1", 5);
+      const result = service.submitEstimate("   ", "socket1", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid session ID");
@@ -249,7 +249,7 @@ describe("SessionService", () => {
 
     it("should fail for empty socketId", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "", 5);
+      const result = service.submitEstimate(sessionId, "", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid socket ID");
@@ -257,7 +257,7 @@ describe("SessionService", () => {
 
     it("should fail for whitespace-only socketId", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "   ", 5);
+      const result = service.submitEstimate(sessionId, "   ", "5");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid socket ID");
@@ -265,8 +265,7 @@ describe("SessionService", () => {
 
     it("should fail for invalid estimate value", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      // @ts-expect-error Testing invalid input
-      const result = service.submitEstimate(sessionId, "socket1", 4);
+      const result = service.submitEstimate(sessionId, "socket1", "4");
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Invalid estimate value");
@@ -274,32 +273,32 @@ describe("SessionService", () => {
 
     it("should update participant.currentEstimate", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "socket1", 8);
+      const result = service.submitEstimate(sessionId, "socket1", "8");
 
       expect(result.success).toBe(true);
       const session = service.getSession(sessionId);
       const participant = session?.participants.get("socket1");
-      expect(participant?.currentEstimate).toBe(8);
+      expect(participant?.currentEstimate).toBe("8");
     });
 
-    it("should allow question mark estimate (-1)", () => {
+    it("should allow question mark estimate", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      const result = service.submitEstimate(sessionId, "socket1", -1);
+      const result = service.submitEstimate(sessionId, "socket1", "?");
 
       expect(result.success).toBe(true);
       const session = service.getSession(sessionId);
-      expect(session?.currentRound.estimates.get("socket1")).toBe(-1);
+      expect(session?.currentRound.estimates.get("socket1")).toBe("?");
     });
 
     it("should allow updating an existing estimate", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
-      service.submitEstimate(sessionId, "socket1", 3);
-      const result = service.submitEstimate(sessionId, "socket1", 8);
+      service.submitEstimate(sessionId, "socket1", "3");
+      const result = service.submitEstimate(sessionId, "socket1", "8");
 
       expect(result.success).toBe(true);
       const session = service.getSession(sessionId);
-      expect(session?.currentRound.estimates.get("socket1")).toBe(8);
-      expect(session?.participants.get("socket1")?.currentEstimate).toBe(8);
+      expect(session?.currentRound.estimates.get("socket1")).toBe("8");
+      expect(session?.participants.get("socket1")?.currentEstimate).toBe("8");
     });
 
     it("should update lastActivity timestamp", () => {
@@ -307,12 +306,42 @@ describe("SessionService", () => {
       const session = service.getSession(sessionId);
       const originalTime = session?.lastActivity;
 
-      const result = service.submitEstimate(sessionId, "socket1", 5);
+      const result = service.submitEstimate(sessionId, "socket1", "5");
 
       const updatedSession = service.getSession(sessionId);
       expect(updatedSession?.lastActivity.getTime()).toBeGreaterThanOrEqual(
         originalTime?.getTime() || 0
       );
+    });
+
+    it("should reject estimate not in fibonacci deck", () => {
+      const { sessionId } = service.createSession("socket1", "Alice", "fibonacci");
+      service.joinSession(sessionId, "socket2", "Bob");
+      const result = service.submitEstimate(sessionId, "socket2", "XL");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid estimate value");
+    });
+
+    it("should reject estimate not in tshirt deck", () => {
+      const { sessionId } = service.createSession("socket1", "Alice", "tshirt");
+      service.joinSession(sessionId, "socket2", "Bob");
+      const result = service.submitEstimate(sessionId, "socket2", "8");
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Invalid estimate value");
+    });
+
+    it("should accept valid tshirt estimate", () => {
+      const { sessionId } = service.createSession("socket1", "Alice", "tshirt");
+      service.joinSession(sessionId, "socket2", "Bob");
+      const result = service.submitEstimate(sessionId, "socket2", "XL");
+      expect(result.success).toBe(true);
+    });
+
+    it("should accept ? in tshirt deck", () => {
+      const { sessionId } = service.createSession("socket1", "Alice", "tshirt");
+      service.joinSession(sessionId, "socket2", "Bob");
+      const result = service.submitEstimate(sessionId, "socket2", "?");
+      expect(result.success).toBe(true);
     });
   });
 
@@ -322,9 +351,9 @@ describe("SessionService", () => {
       service.joinSession(sessionId, "socket2", "Bob");
       service.joinSession(sessionId, "socket3", "Charlie");
 
-      service.submitEstimate(sessionId, "socket1", 5);
-      service.submitEstimate(sessionId, "socket2", 8);
-      service.submitEstimate(sessionId, "socket3", 13);
+      service.submitEstimate(sessionId, "socket1", "5");
+      service.submitEstimate(sessionId, "socket2", "8");
+      service.submitEstimate(sessionId, "socket3", "13");
 
       const result = service.revealCards(sessionId, "socket1");
 
@@ -379,8 +408,8 @@ describe("SessionService", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
 
-      service.submitEstimate(sessionId, "socket1", -1);
-      service.submitEstimate(sessionId, "socket2", -1);
+      service.submitEstimate(sessionId, "socket1", "?");
+      service.submitEstimate(sessionId, "socket2", "?");
 
       const result = service.revealCards(sessionId, "socket1");
 
@@ -394,8 +423,8 @@ describe("SessionService", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
 
-      service.submitEstimate(sessionId, "socket1", 5);
-      service.submitEstimate(sessionId, "socket2", 8);
+      service.submitEstimate(sessionId, "socket1", "5");
+      service.submitEstimate(sessionId, "socket2", "8");
       service.revealCards(sessionId, "socket1");
 
       const result = service.newRound(sessionId, "socket1");
@@ -456,9 +485,9 @@ describe("SessionService", () => {
       service.joinSession(sessionId, "socket2", "Bob");
       service.joinSession(sessionId, "socket3", "Charlie");
 
-      service.submitEstimate(sessionId, "socket1", 5);
-      service.submitEstimate(sessionId, "socket2", 8);
-      service.submitEstimate(sessionId, "socket3", 13);
+      service.submitEstimate(sessionId, "socket1", "5");
+      service.submitEstimate(sessionId, "socket2", "8");
+      service.submitEstimate(sessionId, "socket3", "13");
       service.revealCards(sessionId, "socket1");
 
       const result = service.newRound(sessionId, "socket1");
@@ -531,7 +560,7 @@ describe("SessionService", () => {
     it("should remove participant's estimate when they leave", () => {
       const { sessionId } = service.createSession("socket1", "Alice");
       service.joinSession(sessionId, "socket2", "Bob");
-      service.submitEstimate(sessionId, "socket2", 5);
+      service.submitEstimate(sessionId, "socket2", "5");
 
       const result = service.removeParticipant(sessionId, "socket2");
 

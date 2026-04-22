@@ -1,13 +1,14 @@
 // backend/src/services/SessionService.ts
-import type { EstimateValue, Participant, Session } from "../types/types.js";
-import { deduplicateName, generateSessionId } from "../types/types.js";
+import type { CardDeck, EstimateValue, Participant, Session } from "../types/types.js";
+import { VALID_ESTIMATES, deduplicateName, generateSessionId } from "../types/types.js";
 
 export class SessionService {
   private sessions: Map<string, Session> = new Map();
 
   createSession(
     moderatorSocketId: string,
-    moderatorName: string
+    moderatorName: string,
+    cardDeck: CardDeck = "fibonacci"
   ): { sessionId: string; moderator: Participant } {
     if (!moderatorSocketId?.trim()) {
       throw new Error("Invalid moderator socket ID");
@@ -32,6 +33,7 @@ export class SessionService {
     const session: Session = {
       id: sessionId,
       moderatorSocketId,
+      cardDeck,
       participants: new Map([[moderatorSocketId, moderator]]),
       currentRound: {
         estimates: new Map(),
@@ -115,15 +117,14 @@ export class SessionService {
       return { success: false, error: "Invalid socket ID" };
     }
 
-    const validEstimates: EstimateValue[] = [1, 2, 3, 5, 8, 13, 21, -1];
-    if (!validEstimates.includes(estimate)) {
-      return { success: false, error: "Invalid estimate value" };
-    }
-
     const session = this.sessions.get(sessionId);
 
     if (!session) {
       return { success: false, error: "Session not found" };
+    }
+
+    if (!VALID_ESTIMATES[session.cardDeck].includes(estimate)) {
+      return { success: false, error: "Invalid estimate value" };
     }
 
     const participant = session.participants.get(socketId);
