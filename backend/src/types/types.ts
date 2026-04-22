@@ -1,4 +1,11 @@
-export type EstimateValue = 1 | 2 | 3 | 5 | 8 | 13 | 21 | -1; // -1 represents "?"
+export type EstimateValue = string;
+
+export type CardDeck = "fibonacci" | "tshirt";
+
+export const VALID_ESTIMATES: Record<CardDeck, string[]> = {
+  fibonacci: ["1", "2", "3", "5", "8", "13", "21", "?"],
+  tshirt: ["XS", "S", "M", "L", "XL", "?"],
+};
 
 export interface Participant {
   socketId: string;
@@ -16,6 +23,7 @@ export interface Round {
 export interface Session {
   id: string;
   moderatorSocketId: string;
+  cardDeck: CardDeck;
   participants: Map<string, Participant>;
   currentRound: Round;
   createdAt: Date;

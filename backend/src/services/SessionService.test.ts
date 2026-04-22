@@ -51,6 +51,18 @@ describe("SessionService", () => {
     it("should throw error for whitespace-only moderator name", () => {
       expect(() => service.createSession("socket1", "   ")).toThrow("Invalid moderator name");
     });
+
+    it("should default to fibonacci deck", () => {
+      const result = service.createSession("socket1", "Alice");
+      const session = service.getSession(result.sessionId);
+      expect(session?.cardDeck).toBe("fibonacci");
+    });
+
+    it("should store tshirt deck when specified", () => {
+      const result = service.createSession("socket1", "Alice", "tshirt");
+      const session = service.getSession(result.sessionId);
+      expect(session?.cardDeck).toBe("tshirt");
+    });
   });
 
   describe("joinSession", () => {
