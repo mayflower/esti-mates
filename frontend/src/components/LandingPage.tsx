@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useBranding } from "../contexts/BrandingContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import type { CardDeck } from "../types/types";
 
 const Container = styled.div`
   position: relative;
@@ -95,6 +96,38 @@ const Button = styled.button`
   }
 `;
 
+const DeckSelector = styled.div`
+  display: flex;
+  gap: ${(props) => props.theme.spacing.sm};
+  margin-bottom: ${(props) => props.theme.spacing.md};
+`;
+
+const DeckButton = styled.button<{ $active: boolean }>`
+  flex: 1;
+  padding: ${(props) => props.theme.spacing.sm} ${(props) => props.theme.spacing.md};
+  border: 2px solid
+    ${(props) => (props.$active ? props.theme.colors.primary : props.theme.colors.border)};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  background: ${(props) => (props.$active ? props.theme.colors.primary : "transparent")};
+  color: ${(props) => (props.$active ? "white" : props.theme.colors.text)};
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: ${(props) => props.theme.colors.primary};
+  }
+`;
+
+const DeckLabel = styled.label`
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: ${(props) => props.theme.colors.textSecondary};
+  margin-bottom: ${(props) => props.theme.spacing.xs};
+`;
+
 const SectionTitle = styled.h2`
   color: ${(props) => props.theme.colors.text};
   margin-bottom: ${(props) => props.theme.spacing.md};
@@ -140,11 +173,12 @@ const Footer = styled.footer`
 `;
 
 export interface LandingPageProps {
-  onCreateSession: (name: string) => void;
+  onCreateSession: (name: string, cardDeck: CardDeck) => void;
 }
 
 export function LandingPage({ onCreateSession }: LandingPageProps) {
   const [createName, setCreateName] = useState("");
+  const [cardDeck, setCardDeck] = useState<CardDeck>("fibonacci");
   const [joinSessionId, setJoinSessionId] = useState("");
   const navigate = useNavigate();
   const branding = useBranding();
@@ -156,7 +190,7 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
       dialog.error(intl.formatMessage({ id: "landing.nameRequired" }));
       return;
     }
-    onCreateSession(createName.trim());
+    onCreateSession(createName.trim(), cardDeck);
   };
 
   const handleJoin = () => {
@@ -187,6 +221,25 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
           onKeyPress={(e) => e.key === "Enter" && handleCreate()}
           maxLength={50}
         />
+        <DeckLabel>
+          <FormattedMessage id="landing.deckLabel" />
+        </DeckLabel>
+        <DeckSelector>
+          <DeckButton
+            type="button"
+            $active={cardDeck === "fibonacci"}
+            onClick={() => setCardDeck("fibonacci")}
+          >
+            <FormattedMessage id="landing.deckFibonacci" />
+          </DeckButton>
+          <DeckButton
+            type="button"
+            $active={cardDeck === "tshirt"}
+            onClick={() => setCardDeck("tshirt")}
+          >
+            <FormattedMessage id="landing.deckTshirt" />
+          </DeckButton>
+        </DeckSelector>
         <Button onClick={handleCreate}><FormattedMessage id="landing.createButton" /></Button>
       </Card>
 
