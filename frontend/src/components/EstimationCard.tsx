@@ -1,7 +1,5 @@
 // frontend/src/components/EstimationCard.tsx
 import styled from "styled-components";
-import type { EstimateValue } from "../types/types";
-import { getEstimateLabel } from "../types/types";
 
 const Card = styled.button<{ $selected: boolean }>`
   background: ${(props) =>
@@ -40,9 +38,9 @@ const Card = styled.button<{ $selected: boolean }>`
 `;
 
 interface Props {
-  value: EstimateValue;
+  value: string;
   selected: boolean;
-  onSelect: (value: EstimateValue) => void;
+  onSelect: (value: string) => void;
   disabled: boolean;
 }
 
@@ -52,10 +50,10 @@ export function EstimationCard({ value, selected, onSelect, disabled }: Props) {
       $selected={selected}
       onClick={() => onSelect(value)}
       disabled={disabled}
-      aria-label={`Estimate ${getEstimateLabel(value)} story points`}
+      aria-label={`Estimate ${value}`}
       aria-pressed={selected}
     >
-      {getEstimateLabel(value)}
+      {value}
     </Card>
   );
 }

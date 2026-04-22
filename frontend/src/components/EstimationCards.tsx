@@ -1,7 +1,8 @@
 // frontend/src/components/EstimationCards.tsx
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
-import { ESTIMATE_VALUES, type EstimateValue } from "../types/types";
+import { DECK_VALUES } from "../types/types";
+import { useSession } from "../contexts/SessionContext";
 import { EstimationCard } from "./EstimationCard";
 
 const Grid = styled.div`
@@ -27,8 +28,8 @@ const Message = styled.div`
 `;
 
 interface Props {
-  selectedEstimate: number | null;
-  onSelectEstimate: (value: EstimateValue) => void;
+  selectedEstimate: string | null;
+  onSelectEstimate: (value: string) => void;
   disabled: boolean;
   isObserver: boolean;
 }
@@ -39,13 +40,15 @@ export function EstimationCards({
   disabled,
   isObserver,
 }: Props) {
+  const { cardDeck } = useSession();
+
   if (isObserver) {
     return <Message><FormattedMessage id="estimation.observerMessage" /></Message>;
   }
 
   return (
     <Grid>
-      {ESTIMATE_VALUES.map((value) => (
+      {DECK_VALUES[cardDeck].map((value) => (
         <EstimationCard
           key={value}
           value={value}
