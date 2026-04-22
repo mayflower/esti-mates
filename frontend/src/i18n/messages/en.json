@@ -10,6 +10,9 @@
   "landing.sessionIdPlaceholder": "Session ID (6 characters)",
   "landing.joinButton": "Join Existing Session",
   "landing.nameRequired": "Please enter your name",
+  "landing.deckLabel": "Estimation system",
+  "landing.deckFibonacci": "Fibonacci",
+  "landing.deckTshirt": "T-Shirt Sizes",
   "landing.sessionIdRequired": "Please enter a session ID",
 
   "session.joinTitle": "Join Session",

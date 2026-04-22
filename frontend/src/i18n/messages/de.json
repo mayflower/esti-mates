@@ -10,6 +10,9 @@
   "landing.sessionIdPlaceholder": "Session-ID (6 Zeichen)",
   "landing.joinButton": "Session beitreten",
   "landing.nameRequired": "Bitte gib deinen Namen ein",
+  "landing.deckLabel": "Schätzsystem",
+  "landing.deckFibonacci": "Fibonacci",
+  "landing.deckTshirt": "T-Shirt Sizes",
   "landing.sessionIdRequired": "Bitte gib eine Session-ID ein",
 
   "session.joinTitle": "Session beitreten",
