@@ -3,7 +3,6 @@ import type React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 import type { EstimateValue, Participant } from "../types/types";
-import { getEstimateLabel } from "../types/types";
 
 const Container = styled.div`
   background: ${(props) => props.theme.colors.surface};
@@ -135,7 +134,7 @@ export function ParticipantList({
       if (estimate !== undefined && estimate !== null) {
         return intl.formatMessage(
           { id: "participants.statusVotedValue" },
-          { value: getEstimateLabel(estimate) }
+          { value: estimate }
         );
       }
     }
@@ -154,7 +153,7 @@ export function ParticipantList({
       const estimate = revealedEstimates[participant.socketId];
       return (
         <StatusIndicator $status="revealed">
-          {estimate !== undefined ? getEstimateLabel(estimate) : "-"}
+          {estimate !== undefined ? estimate : "-"}
         </StatusIndicator>
       );
     }

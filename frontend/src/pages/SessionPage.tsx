@@ -301,7 +301,7 @@ export function SessionPage() {
         <ParticipantList
           participants={participants}
           revealed={roundRevealed}
-          revealedEstimates={revealedEstimates as Record<string, EstimateValue> | null}
+          revealedEstimates={revealedEstimates}
           currentSocketId={currentSocketId}
           isModerator={isModerator}
           onToggleObserver={toggleObserver}
