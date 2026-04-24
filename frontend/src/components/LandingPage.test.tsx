@@ -47,6 +47,16 @@ describe("LandingPage", () => {
     expect(element).toBeDefined();
   });
 
+  it("should render a main landmark", () => {
+    renderLandingPage();
+    expect(screen.getByRole("main")).toBeDefined();
+  });
+
+  it("should render a level-1 heading", () => {
+    renderLandingPage();
+    expect(screen.getByRole("heading", { level: 1 })).toBeDefined();
+  });
+
   it("should call onCreateSession when button clicked", () => {
     const { props } = renderLandingPage();
 

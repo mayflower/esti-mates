@@ -8,7 +8,7 @@ import { useNotification } from "../contexts/NotificationContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { CardDeck } from "../types/types";
 
-const Container = styled.div`
+const Container = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
