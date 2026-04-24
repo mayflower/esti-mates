@@ -15,6 +15,7 @@
   "landing.deckTshirt": "T-Shirt Sizes",
   "landing.sessionIdRequired": "Please enter a session ID",
 
+  "session.pageTitle": "Planning Poker Session",
   "session.joinTitle": "Join Session",
   "session.enterName": "Enter your name",
   "session.joinButton": "Join",

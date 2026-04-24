@@ -13,7 +13,7 @@ import { useNotification } from "../contexts/NotificationContext";
 import { useSession } from "../contexts/SessionContext";
 import type { EstimateValue } from "../types/types";
 
-const Container = styled.div`
+const Container = styled.main`
   display: flex;
   height: 100vh;
 
@@ -27,6 +27,18 @@ const MainArea = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+`;
+
+const VisuallyHiddenH1 = styled.h1`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `;
 
 const Header = styled.header`
@@ -278,6 +290,9 @@ export function SessionPage() {
   if (!joined && !nameFromState) {
     return (
       <Container>
+        <VisuallyHiddenH1>
+          <FormattedMessage id="session.pageTitle" />
+        </VisuallyHiddenH1>
         <JoinPrompt>
           <h2><FormattedMessage id="session.joinTitle" /></h2>
           <Input
@@ -296,6 +311,9 @@ export function SessionPage() {
 
   return (
     <Container>
+      <VisuallyHiddenH1>
+        <FormattedMessage id="session.pageTitle" />
+      </VisuallyHiddenH1>
       <ParticipantOverlay $visible={showParticipants} onClick={() => setShowParticipants(false)} />
       <ParticipantDrawer $open={showParticipants}>
         <ParticipantList
