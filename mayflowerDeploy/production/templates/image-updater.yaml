@@ -2,8 +2,8 @@ apiVersion: argocd-image-updater.argoproj.io/v1alpha1
 kind: ImageUpdater
 metadata:
   name: {{ .Release.Name }}
-spec:
   namespace: argocd
+spec:
   applicationRefs:
     - namePattern: {{ .Release.Name | quote }}
       images:
