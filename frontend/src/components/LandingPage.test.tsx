@@ -40,33 +40,44 @@ function renderLandingPage(props = {}) {
 }
 
 describe("LandingPage", () => {
-  it("should render create session button", () => {
+  it("should render create session button", async () => {
     renderLandingPage();
-    // German: "Neue Session erstellen" or English: "Create New Session"
-    const element = screen.getByRole("button", { name: /Neue Session erstellen|Create New Session/i });
-    expect(element).toBeDefined();
+    // BrandingProvider fetches /api/config on first mount and renders null
+    // until it resolves, so use findAllByRole to wait for the real tree.
+    // The Create-Session button and the SectionTitle above it share the same
+    // i18n key `landing.createSession`, so filter by text content instead of
+    // accessible name to find the button specifically.
+    const buttons = await screen.findAllByRole("button");
+    const createButton = buttons.find((b) =>
+      /Neue Session erstellen|Create New Session/i.test(b.textContent ?? "")
+    );
+    expect(createButton).toBeDefined();
   });
 
-  it("should render a main landmark", () => {
+  it("should render a main landmark", async () => {
     renderLandingPage();
-    expect(screen.getByRole("main")).toBeDefined();
+    expect(await screen.findByRole("main")).toBeDefined();
   });
 
-  it("should render a level-1 heading", () => {
+  it("should render a level-1 heading", async () => {
     renderLandingPage();
-    expect(screen.getByRole("heading", { level: 1 })).toBeDefined();
+    expect(await screen.findByRole("heading", { level: 1 })).toBeDefined();
   });
 
-  it("should call onCreateSession when button clicked", () => {
+  it("should call onCreateSession when button clicked", async () => {
     const { props } = renderLandingPage();
 
     // German: "Dein Name" or English: "Your name"
-    const nameInput = screen.getByPlaceholderText(/Dein Name|Your name/i);
+    const nameInput = await screen.findByPlaceholderText(/Dein Name|Your name/i);
     fireEvent.change(nameInput, { target: { value: "John Doe" } });
 
-    const createButton = screen.getByRole("button", { name: /Neue Session erstellen|Create New Session/i });
+    const createButton = screen
+      .getAllByRole("button")
+      .find((b) => /Neue Session erstellen|Create New Session/i.test(b.textContent ?? ""));
+    if (!createButton) throw new Error("create button not found");
     fireEvent.click(createButton);
 
-    expect(props.onCreateSession).toHaveBeenCalledWith("John Doe");
+    // Default deck is "fibonacci" — LandingPage passes (name, cardDeck).
+    expect(props.onCreateSession).toHaveBeenCalledWith("John Doe", "fibonacci");
   });
 });
