@@ -52,7 +52,7 @@ export function createTheme(config: AppConfig): Theme {
       background: "#f5f5f5",
       surface: "#ffffff",
       text: "#212121",
-      textSecondary: "#757575",
+      textSecondary: "#616161",
       border: "#e0e0e0",
       success: "#4caf50",
       error: "#f44336",
