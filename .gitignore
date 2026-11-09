@@ -9,3 +9,5 @@ coverage/
 .vite/
 .worktrees/
 talk/
+.claude/worktrees/
+.claude/settings.local.json
