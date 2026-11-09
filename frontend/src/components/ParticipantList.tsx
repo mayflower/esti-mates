@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import styled from "styled-components";
 import type { EstimateValue, Participant } from "../types/types";
 
-const Container = styled.div`
+const Container = styled.section`
   background: ${(props) => props.theme.colors.surface};
   border-right: 1px solid ${(props) => props.theme.colors.border};
   padding: ${(props) => props.theme.spacing.md};
@@ -163,7 +163,7 @@ export function ParticipantList({
   };
 
   return (
-    <Container role="region" aria-label={intl.formatMessage({ id: "participants.regionLabel" })}>
+    <Container aria-label={intl.formatMessage({ id: "participants.regionLabel" })}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Title>
           <FormattedMessage id="participants.title" values={{ count: participants.length }} />

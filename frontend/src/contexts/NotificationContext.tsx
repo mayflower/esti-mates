@@ -66,7 +66,9 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   // Cleanup all timeouts on unmount
   useEffect(() => {
     return () => {
-      timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      for (const timeout of timeoutsRef.current.values()) {
+        clearTimeout(timeout);
+      }
       timeoutsRef.current.clear();
     };
   }, []);

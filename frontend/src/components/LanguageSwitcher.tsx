@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import { useLocale } from "../i18n";
 
-const Container = styled.div`
+const Container = styled.fieldset`
+  /* neutralise fieldset UA styles (margin/padding reset globally in index.html) */
+  border: 0;
+  min-inline-size: 0;
   display: flex;
   gap: 2px;
   background: ${(props) => props.theme.colors.border};
@@ -29,7 +32,7 @@ export function LanguageSwitcher() {
   const { locale, setLocale } = useLocale();
 
   return (
-    <Container role="group" aria-label="Language selection">
+    <Container aria-label="Language selection">
       <ToggleButton
         $active={locale === "de"}
         data-active={locale === "de"}
