@@ -9,10 +9,7 @@ const BrandingContext = createContext<Theme | null>(null);
 export function BrandingProvider({ children }: { children: React.ReactNode }) {
   const { config, loading } = useConfig();
 
-  const theme = useMemo(
-    () => (config ? createTheme(config) : null),
-    [config]
-  );
+  const theme = useMemo(() => (config ? createTheme(config) : null), [config]);
 
   if (loading || !theme) return null;
 

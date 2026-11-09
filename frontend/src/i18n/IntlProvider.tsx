@@ -1,9 +1,9 @@
-import { createContext, useContext, useState, useMemo, useCallback, type ReactNode } from 'react';
-import { IntlProvider } from 'react-intl';
-import deMessages from './messages/de.json';
-import enMessages from './messages/en.json';
+import { type ReactNode, createContext, useCallback, useContext, useMemo, useState } from "react";
+import { IntlProvider } from "react-intl";
+import deMessages from "./messages/de.json";
+import enMessages from "./messages/en.json";
 
-type Locale = 'de' | 'en';
+type Locale = "de" | "en";
 
 interface LocaleContextType {
   locale: Locale;
@@ -17,12 +17,12 @@ const messages: Record<Locale, Record<string, string>> = {
   en: enMessages,
 };
 
-const STORAGE_KEY = 'locale';
-const SUPPORTED_LOCALES: Locale[] = ['de', 'en'];
-const DEFAULT_LOCALE: Locale = 'de';
+const STORAGE_KEY = "locale";
+const SUPPORTED_LOCALES: Locale[] = ["de", "en"];
+const DEFAULT_LOCALE: Locale = "de";
 
 function detectBrowserLocale(): Locale {
-  const browserLang = navigator.language.split('-')[0];
+  const browserLang = navigator.language.split("-")[0];
   if (SUPPORTED_LOCALES.includes(browserLang as Locale)) {
     return browserLang as Locale;
   }
@@ -59,7 +59,7 @@ export function AppIntlProvider({ children }: { children: ReactNode }) {
 export function useLocale(): LocaleContextType {
   const context = useContext(LocaleContext);
   if (!context) {
-    throw new Error('useLocale must be used within AppIntlProvider');
+    throw new Error("useLocale must be used within AppIntlProvider");
   }
   return context;
 }

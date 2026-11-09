@@ -1,5 +1,5 @@
-import { Dialog as DialogComponent } from './Dialog';
-import { Dialog } from '../contexts/NotificationContext';
+import type { Dialog } from "../contexts/NotificationContext";
+import { Dialog as DialogComponent } from "./Dialog";
 
 interface DialogContainerProps {
   dialog: Dialog | null;

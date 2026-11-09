@@ -1,13 +1,18 @@
 import { renderHook } from "@testing-library/react";
 import type { Socket } from "socket.io-client";
+import { ThemeProvider } from "styled-components";
 // frontend/src/contexts/SessionContext.test.tsx
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ThemeProvider } from "styled-components";
 import { createTheme } from "../styles/theme";
 import { NotificationProvider } from "./NotificationContext";
 import { SessionProvider, useSession } from "./SessionContext";
 
-const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
+const theme = createTheme({
+  brandName: "Test",
+  brandLogoUrl: "/logo.svg",
+  brandPrimaryColor: "#1a73e8",
+  brandFooterText: "Test",
+});
 
 describe("SessionContext", () => {
   let mockSocket: Partial<Socket>;

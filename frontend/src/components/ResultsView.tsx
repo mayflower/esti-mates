@@ -1,6 +1,6 @@
+import { FormattedMessage, useIntl } from "react-intl";
 // frontend/src/components/ResultsView.tsx
 import styled from "styled-components";
-import { FormattedMessage, useIntl } from 'react-intl';
 import { sortEstimateValues } from "../types/types";
 import type { CardDeck } from "../types/types";
 
@@ -77,9 +77,13 @@ export function ResultsView({ estimates, cardDeck }: Props) {
   // Handle empty estimates
   if (Object.keys(estimates).length === 0) {
     return (
-      <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
-        <Title><FormattedMessage id="results.title" /></Title>
-        <p role="status"><FormattedMessage id="results.noVotes" /></p>
+      <Container role="region" aria-label={intl.formatMessage({ id: "results.regionLabel" })}>
+        <Title>
+          <FormattedMessage id="results.title" />
+        </Title>
+        <p role="status">
+          <FormattedMessage id="results.noVotes" />
+        </p>
       </Container>
     );
   }
@@ -98,8 +102,10 @@ export function ResultsView({ estimates, cardDeck }: Props) {
   const sortedGroups = sortedKeys.map((key) => [key, groupedEstimates[key]] as [string, number]);
 
   return (
-    <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
-      <Title><FormattedMessage id="results.title" /></Title>
+    <Container role="region" aria-label={intl.formatMessage({ id: "results.regionLabel" })}>
+      <Title>
+        <FormattedMessage id="results.title" />
+      </Title>
 
       <EstimatesGrid>
         {sortedGroups.map(([value, count]) => (

@@ -1,12 +1,12 @@
-import * as RadixDialog from '@radix-ui/react-dialog';
-import { FiXCircle, FiInfo } from 'react-icons/fi';
-import { FormattedMessage, useIntl } from 'react-intl';
-import styled, { keyframes } from 'styled-components';
+import * as RadixDialog from "@radix-ui/react-dialog";
+import { FiInfo, FiXCircle } from "react-icons/fi";
+import { FormattedMessage, useIntl } from "react-intl";
+import styled, { keyframes } from "styled-components";
 
 interface DialogProps {
   title?: string;
   message: string;
-  type?: 'error' | 'info';
+  type?: "error" | "info";
   onClose: () => void;
 }
 
@@ -68,29 +68,29 @@ const ContentWrapper = styled.div`
   gap: 1rem;
 `;
 
-const IconWrapper = styled.div<{ $type: 'error' | 'info' }>`
+const IconWrapper = styled.div<{ $type: "error" | "info" }>`
   width: 48px;
   height: 48px;
-  color: ${p => p.$type === 'error' ? p.theme.colors.error : p.theme.colors.primary};
+  color: ${(p) => (p.$type === "error" ? p.theme.colors.error : p.theme.colors.primary)};
 `;
 
 const Title = styled(RadixDialog.Title)`
   font-size: 1.125rem;
   font-weight: 600;
-  color: ${p => p.theme.colors.text};
+  color: ${(p) => p.theme.colors.text};
   margin: 0;
 `;
 
 const Description = styled(RadixDialog.Description)`
   font-size: 0.875rem;
-  color: ${p => p.theme.colors.textSecondary};
+  color: ${(p) => p.theme.colors.textSecondary};
   margin: 0;
 `;
 
 const OkButton = styled.button`
   margin-top: 0.5rem;
   width: 100%;
-  background-color: ${p => p.theme.colors.primary};
+  background-color: ${(p) => p.theme.colors.primary};
   color: white;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -104,12 +104,13 @@ const OkButton = styled.button`
   }
 `;
 
-export function Dialog({ title, message, type = 'info', onClose }: DialogProps) {
+export function Dialog({ title, message, type = "info", onClose }: DialogProps) {
   const intl = useIntl();
   const Icon = iconMap[type];
-  const defaultTitle = type === 'error'
-    ? intl.formatMessage({ id: 'dialog.error' })
-    : intl.formatMessage({ id: 'dialog.info' });
+  const defaultTitle =
+    type === "error"
+      ? intl.formatMessage({ id: "dialog.error" })
+      : intl.formatMessage({ id: "dialog.info" });
 
   return (
     <RadixDialog.Root open={true} onOpenChange={(open) => !open && onClose()}>
@@ -122,7 +123,9 @@ export function Dialog({ title, message, type = 'info', onClose }: DialogProps) 
             </IconWrapper>
             <Title>{title || defaultTitle}</Title>
             <Description>{message}</Description>
-            <OkButton onClick={onClose}><FormattedMessage id="dialog.ok" /></OkButton>
+            <OkButton onClick={onClose}>
+              <FormattedMessage id="dialog.ok" />
+            </OkButton>
           </ContentWrapper>
         </Content>
       </RadixDialog.Portal>

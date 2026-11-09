@@ -256,7 +256,7 @@ export function SessionPage() {
     }
     if (!urlSessionId) {
       dialog.error(intl.formatMessage({ id: "session.invalidSessionId" }), {
-        onClose: () => navigate('/'),
+        onClose: () => navigate("/"),
       });
       return;
     }
@@ -294,7 +294,9 @@ export function SessionPage() {
           <FormattedMessage id="session.pageTitle" />
         </VisuallyHiddenH1>
         <JoinPrompt>
-          <h2><FormattedMessage id="session.joinTitle" /></h2>
+          <h2>
+            <FormattedMessage id="session.joinTitle" />
+          </h2>
           <Input
             type="text"
             placeholder={intl.formatMessage({ id: "session.enterName" })}
@@ -303,7 +305,9 @@ export function SessionPage() {
             onKeyPress={(e) => e.key === "Enter" && handleJoin()}
             maxLength={50}
           />
-          <Button onClick={handleJoin}><FormattedMessage id="session.joinButton" /></Button>
+          <Button onClick={handleJoin}>
+            <FormattedMessage id="session.joinButton" />
+          </Button>
         </JoinPrompt>
       </Container>
     );
@@ -336,19 +340,32 @@ export function SessionPage() {
               👥 {participants.length}
             </ParticipantToggle>
             <LanguageSwitcher />
-            <SessionId onClick={handleCopySessionId} title={intl.formatMessage({ id: "session.clickToCopy" })}>
+            <SessionId
+              onClick={handleCopySessionId}
+              title={intl.formatMessage({ id: "session.clickToCopy" })}
+            >
               {sessionId}
             </SessionId>
             <ObserverToggleButton
               $isObserver={isObserver}
               onClick={handleToggleObserver}
-              title={isObserver
-                ? intl.formatMessage({ id: "session.switchToParticipant" })
-                : intl.formatMessage({ id: "session.switchToObserver" })}
+              title={
+                isObserver
+                  ? intl.formatMessage({ id: "session.switchToParticipant" })
+                  : intl.formatMessage({ id: "session.switchToObserver" })
+              }
             >
-              {isObserver
-                ? <><span>👁️ </span><FormattedMessage id="session.observerMode" /></>
-                : <><span>👁️ </span><FormattedMessage id="session.participantMode" /></>}
+              {isObserver ? (
+                <>
+                  <span>👁️ </span>
+                  <FormattedMessage id="session.observerMode" />
+                </>
+              ) : (
+                <>
+                  <span>👁️ </span>
+                  <FormattedMessage id="session.participantMode" />
+                </>
+              )}
             </ObserverToggleButton>
           </SessionInfo>
         </Header>
@@ -364,10 +381,7 @@ export function SessionPage() {
           )}
 
           {roundRevealed && revealedEstimates && (
-            <ResultsView
-              estimates={revealedEstimates}
-              cardDeck={cardDeck}
-            />
+            <ResultsView estimates={revealedEstimates} cardDeck={cardDeck} />
           )}
         </Content>
 

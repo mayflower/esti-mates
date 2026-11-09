@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { useLocale } from '../i18n';
+import styled from "styled-components";
+import { useLocale } from "../i18n";
 
 const Container = styled.div`
   display: flex;
@@ -10,8 +10,8 @@ const Container = styled.div`
 `;
 
 const ToggleButton = styled.button<{ $active: boolean }>`
-  background: ${(props) => (props.$active ? props.theme.colors.primary : 'transparent')};
-  color: ${(props) => (props.$active ? 'white' : props.theme.colors.text)};
+  background: ${(props) => (props.$active ? props.theme.colors.primary : "transparent")};
+  color: ${(props) => (props.$active ? "white" : props.theme.colors.text)};
   border: none;
   border-radius: ${(props) => props.theme.borderRadius.sm};
   padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.sm};
@@ -31,18 +31,18 @@ export function LanguageSwitcher() {
   return (
     <Container role="group" aria-label="Language selection">
       <ToggleButton
-        $active={locale === 'de'}
-        data-active={locale === 'de'}
-        onClick={() => setLocale('de')}
-        aria-pressed={locale === 'de'}
+        $active={locale === "de"}
+        data-active={locale === "de"}
+        onClick={() => setLocale("de")}
+        aria-pressed={locale === "de"}
       >
         DE
       </ToggleButton>
       <ToggleButton
-        $active={locale === 'en'}
-        data-active={locale === 'en'}
-        onClick={() => setLocale('en')}
-        aria-pressed={locale === 'en'}
+        $active={locale === "en"}
+        data-active={locale === "en"}
+        onClick={() => setLocale("en")}
+        aria-pressed={locale === "en"}
       >
         EN
       </ToggleButton>

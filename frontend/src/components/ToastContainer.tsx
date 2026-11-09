@@ -1,7 +1,7 @@
-import * as RadixToast from '@radix-ui/react-toast';
-import styled from 'styled-components';
-import { Toast as ToastComponent } from './Toast';
-import { Toast } from '../contexts/NotificationContext';
+import * as RadixToast from "@radix-ui/react-toast";
+import styled from "styled-components";
+import type { Toast } from "../contexts/NotificationContext";
+import { Toast as ToastComponent } from "./Toast";
 
 const StyledViewport = styled(RadixToast.Viewport)`
   position: fixed;

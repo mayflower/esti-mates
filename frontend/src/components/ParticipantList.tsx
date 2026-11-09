@@ -132,10 +132,7 @@ export function ParticipantList({
     if (revealed && revealedEstimates) {
       const estimate = revealedEstimates[participant.socketId];
       if (estimate !== undefined && estimate !== null) {
-        return intl.formatMessage(
-          { id: "participants.statusVotedValue" },
-          { value: estimate }
-        );
+        return intl.formatMessage({ id: "participants.statusVotedValue" }, { value: estimate });
       }
     }
     if (participant.currentEstimate !== null) {
