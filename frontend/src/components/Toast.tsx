@@ -1,8 +1,8 @@
-import * as RadixToast from '@radix-ui/react-toast';
-import { FiCheckCircle, FiXCircle, FiInfo, FiX } from 'react-icons/fi';
-import { useIntl } from 'react-intl';
-import styled, { keyframes } from 'styled-components';
-import { ToastType } from '../contexts/NotificationContext';
+import * as RadixToast from "@radix-ui/react-toast";
+import { FiCheckCircle, FiInfo, FiX, FiXCircle } from "react-icons/fi";
+import { useIntl } from "react-intl";
+import styled, { keyframes } from "styled-components";
+import type { ToastType } from "../contexts/NotificationContext";
 
 interface ToastProps {
   id: string;
@@ -36,9 +36,9 @@ const StyledToastRoot = styled(RadixToast.Root)<{ $type: ToastType }>`
   background: white;
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid ${p => {
-    if (p.$type === 'success') return p.theme.colors.success;
-    if (p.$type === 'error') return p.theme.colors.error;
+  border-left: 4px solid ${(p) => {
+    if (p.$type === "success") return p.theme.colors.success;
+    if (p.$type === "error") return p.theme.colors.error;
     return p.theme.colors.primary;
   }};
   padding: 1rem;
@@ -59,9 +59,9 @@ const IconWrapper = styled.div<{ $type: ToastType }>`
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  color: ${p => {
-    if (p.$type === 'success') return p.theme.colors.success;
-    if (p.$type === 'error') return p.theme.colors.error;
+  color: ${(p) => {
+    if (p.$type === "success") return p.theme.colors.success;
+    if (p.$type === "error") return p.theme.colors.error;
     return p.theme.colors.primary;
   }};
 `;
@@ -69,7 +69,7 @@ const IconWrapper = styled.div<{ $type: ToastType }>`
 const Message = styled(RadixToast.Description)`
   flex: 1;
   font-size: 0.875rem;
-  color: ${p => p.theme.colors.text};
+  color: ${(p) => p.theme.colors.text};
 `;
 
 const CloseButton = styled(RadixToast.Close)`
@@ -80,13 +80,13 @@ const CloseButton = styled(RadixToast.Close)`
   background: transparent;
   cursor: pointer;
   transition: background-color 150ms;
-  &:hover { background-color: ${p => p.theme.colors.background}; }
+  &:hover { background-color: ${(p) => p.theme.colors.background}; }
 `;
 
 const CloseIcon = styled(FiX)`
   width: 16px;
   height: 16px;
-  color: ${p => p.theme.colors.textSecondary};
+  color: ${(p) => p.theme.colors.textSecondary};
 `;
 
 export function Toast({ id, message, type, onClose }: ToastProps) {
@@ -94,9 +94,14 @@ export function Toast({ id, message, type, onClose }: ToastProps) {
   const Icon = iconMap[type];
   return (
     <StyledToastRoot $type={type} data-type={type}>
-      <IconWrapper $type={type}><Icon /></IconWrapper>
+      <IconWrapper $type={type}>
+        <Icon />
+      </IconWrapper>
       <Message>{message}</Message>
-      <CloseButton aria-label={intl.formatMessage({ id: 'toast.closeLabel' })} onClick={() => onClose(id)}>
+      <CloseButton
+        aria-label={intl.formatMessage({ id: "toast.closeLabel" })}
+        onClick={() => onClose(id)}
+      >
         <CloseIcon />
       </CloseButton>
     </StyledToastRoot>

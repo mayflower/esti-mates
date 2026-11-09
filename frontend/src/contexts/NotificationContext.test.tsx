@@ -1,11 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '../styles/theme';
-import { AppIntlProvider } from '../i18n';
-import { NotificationProvider, useNotification } from './NotificationContext';
+import { act, renderHook } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
+import { describe, expect, it } from "vitest";
+import { AppIntlProvider } from "../i18n";
+import { createTheme } from "../styles/theme";
+import { NotificationProvider, useNotification } from "./NotificationContext";
 
-const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
+const theme = createTheme({
+  brandName: "Test",
+  brandLogoUrl: "/logo.svg",
+  brandPrimaryColor: "#1a73e8",
+  brandFooterText: "Test",
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -17,14 +22,14 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe('NotificationContext', () => {
-  it('should throw error when useNotification is used outside provider', () => {
+describe("NotificationContext", () => {
+  it("should throw error when useNotification is used outside provider", () => {
     expect(() => {
       renderHook(() => useNotification());
-    }).toThrow('useNotification must be used within NotificationProvider');
+    }).toThrow("useNotification must be used within NotificationProvider");
   });
 
-  it('should provide toast and dialog functions', () => {
+  it("should provide toast and dialog functions", () => {
     const { result } = renderHook(() => useNotification(), {
       wrapper: Wrapper,
     });
@@ -38,7 +43,7 @@ describe('NotificationContext', () => {
     expect(result.current.dialog.show).toBeInstanceOf(Function);
   });
 
-  it('should add toast and respect max 5 limit', () => {
+  it("should add toast and respect max 5 limit", () => {
     const { result } = renderHook(() => useNotification(), {
       wrapper: Wrapper,
     });
@@ -52,21 +57,21 @@ describe('NotificationContext', () => {
     expect(result.current.toasts).toHaveLength(5);
   });
 
-  it('should add dialog and replace previous', () => {
+  it("should add dialog and replace previous", () => {
     const { result } = renderHook(() => useNotification(), {
       wrapper: Wrapper,
     });
 
     act(() => {
-      result.current.dialog.error('First error');
+      result.current.dialog.error("First error");
     });
 
-    expect(result.current.currentDialog?.message).toBe('First error');
+    expect(result.current.currentDialog?.message).toBe("First error");
 
     act(() => {
-      result.current.dialog.error('Second error');
+      result.current.dialog.error("Second error");
     });
 
-    expect(result.current.currentDialog?.message).toBe('Second error');
+    expect(result.current.currentDialog?.message).toBe("Second error");
   });
 });

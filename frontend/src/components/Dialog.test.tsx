@@ -1,11 +1,16 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '../styles/theme';
-import { AppIntlProvider } from '../i18n';
-import { Dialog } from './Dialog';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
+import { describe, expect, it, vi } from "vitest";
+import { AppIntlProvider } from "../i18n";
+import { createTheme } from "../styles/theme";
+import { Dialog } from "./Dialog";
 
-const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
+const theme = createTheme({
+  brandName: "Test",
+  brandLogoUrl: "/logo.svg",
+  brandPrimaryColor: "#1a73e8",
+  brandFooterText: "Test",
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -15,62 +20,39 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe('Dialog', () => {
-  it('should render dialog with message', () => {
-    render(
-      <Dialog
-        message="Test error message"
-        type="error"
-        onClose={() => {}}
-      />,
-      { wrapper: Wrapper }
-    );
+describe("Dialog", () => {
+  it("should render dialog with message", () => {
+    render(<Dialog message="Test error message" type="error" onClose={() => {}} />, {
+      wrapper: Wrapper,
+    });
 
-    expect(screen.getByText('Test error message')).toBeDefined();
+    expect(screen.getByText("Test error message")).toBeDefined();
   });
 
-  it('should show error icon for error type', () => {
-    const { container } = render(
-      <Dialog
-        message="Error"
-        type="error"
-        onClose={() => {}}
-      />,
-      { wrapper: Wrapper }
-    );
+  it("should show error icon for error type", () => {
+    const { container } = render(<Dialog message="Error" type="error" onClose={() => {}} />, {
+      wrapper: Wrapper,
+    });
 
     // Error dialog should have red styling
     expect(container.querySelector('[data-type="error"]')).toBeDefined();
   });
 
-  it('should call onClose when OK button clicked', () => {
+  it("should call onClose when OK button clicked", () => {
     const onClose = vi.fn();
-    render(
-      <Dialog
-        message="Test"
-        type="error"
-        onClose={onClose}
-      />,
-      { wrapper: Wrapper }
-    );
+    render(<Dialog message="Test" type="error" onClose={onClose} />, { wrapper: Wrapper });
 
-    const okButton = screen.getByRole('button', { name: /ok/i });
+    const okButton = screen.getByRole("button", { name: /ok/i });
     fireEvent.click(okButton);
 
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('should render custom title when provided', () => {
-    render(
-      <Dialog
-        title="Custom Title"
-        message="Message"
-        type="error"
-        onClose={() => {}}
-      />,
-      { wrapper: Wrapper }
-    );
+  it("should render custom title when provided", () => {
+    render(<Dialog title="Custom Title" message="Message" type="error" onClose={() => {}} />, {
+      wrapper: Wrapper,
+    });
 
-    expect(screen.getByText('Custom Title')).toBeDefined();
+    expect(screen.getByText("Custom Title")).toBeDefined();
   });
 });

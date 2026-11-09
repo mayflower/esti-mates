@@ -1,8 +1,8 @@
 // frontend/src/components/EstimationCards.tsx
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
-import { DECK_VALUES } from "../types/types";
 import { useSession } from "../contexts/SessionContext";
+import { DECK_VALUES } from "../types/types";
 import { EstimationCard } from "./EstimationCard";
 
 const Grid = styled.div`
@@ -43,7 +43,11 @@ export function EstimationCards({
   const { cardDeck } = useSession();
 
   if (isObserver) {
-    return <Message><FormattedMessage id="estimation.observerMessage" /></Message>;
+    return (
+      <Message>
+        <FormattedMessage id="estimation.observerMessage" />
+      </Message>
+    );
   }
 
   return (

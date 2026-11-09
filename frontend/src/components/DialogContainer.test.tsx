@@ -1,12 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '../styles/theme';
-import { AppIntlProvider } from '../i18n';
-import { DialogContainer } from './DialogContainer';
-import { Dialog as DialogType } from '../contexts/NotificationContext';
+import { render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
+import { describe, expect, it } from "vitest";
+import type { Dialog as DialogType } from "../contexts/NotificationContext";
+import { AppIntlProvider } from "../i18n";
+import { createTheme } from "../styles/theme";
+import { DialogContainer } from "./DialogContainer";
 
-const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
+const theme = createTheme({
+  brandName: "Test",
+  brandLogoUrl: "/logo.svg",
+  brandPrimaryColor: "#1a73e8",
+  brandFooterText: "Test",
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -16,26 +21,22 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe('DialogContainer', () => {
-  it('should render dialog when provided', () => {
+describe("DialogContainer", () => {
+  it("should render dialog when provided", () => {
     const dialog: DialogType = {
-      message: 'Test dialog',
-      type: 'error',
+      message: "Test dialog",
+      type: "error",
     };
 
-    render(
-      <DialogContainer dialog={dialog} onClose={() => {}} />,
-      { wrapper: Wrapper }
-    );
+    render(<DialogContainer dialog={dialog} onClose={() => {}} />, { wrapper: Wrapper });
 
-    expect(screen.getByText('Test dialog')).toBeDefined();
+    expect(screen.getByText("Test dialog")).toBeDefined();
   });
 
-  it('should not render when dialog is null', () => {
-    const { container } = render(
-      <DialogContainer dialog={null} onClose={() => {}} />,
-      { wrapper: Wrapper }
-    );
+  it("should not render when dialog is null", () => {
+    const { container } = render(<DialogContainer dialog={null} onClose={() => {}} />, {
+      wrapper: Wrapper,
+    });
 
     expect(container.firstChild).toBeNull();
   });

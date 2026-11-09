@@ -1,1 +1,1 @@
-export { AppIntlProvider, useLocale } from './IntlProvider';
+export { AppIntlProvider, useLocale } from "./IntlProvider";

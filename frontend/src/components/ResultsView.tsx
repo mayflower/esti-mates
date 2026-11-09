@@ -1,10 +1,10 @@
+import { FormattedMessage, useIntl } from "react-intl";
 // frontend/src/components/ResultsView.tsx
 import styled from "styled-components";
-import { FormattedMessage, useIntl } from 'react-intl';
 import { sortEstimateValues } from "../types/types";
 import type { CardDeck } from "../types/types";
 
-const Container = styled.div`
+const Container = styled.section`
   background: ${(props) => props.theme.colors.surface};
   border-radius: ${(props) => props.theme.borderRadius.lg};
   box-shadow: ${(props) => props.theme.shadows.md};
@@ -66,6 +66,10 @@ const EstimateCount = styled.div`
   color: ${(props) => props.theme.colors.textSecondary};
 `;
 
+const NoVotes = styled.output`
+  display: block;
+`;
+
 interface Props {
   estimates: Record<string, string>;
   cardDeck: CardDeck;
@@ -77,9 +81,13 @@ export function ResultsView({ estimates, cardDeck }: Props) {
   // Handle empty estimates
   if (Object.keys(estimates).length === 0) {
     return (
-      <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
-        <Title><FormattedMessage id="results.title" /></Title>
-        <p role="status"><FormattedMessage id="results.noVotes" /></p>
+      <Container aria-label={intl.formatMessage({ id: "results.regionLabel" })}>
+        <Title>
+          <FormattedMessage id="results.title" />
+        </Title>
+        <NoVotes>
+          <FormattedMessage id="results.noVotes" />
+        </NoVotes>
       </Container>
     );
   }
@@ -98,8 +106,10 @@ export function ResultsView({ estimates, cardDeck }: Props) {
   const sortedGroups = sortedKeys.map((key) => [key, groupedEstimates[key]] as [string, number]);
 
   return (
-    <Container role="region" aria-label={intl.formatMessage({ id: 'results.regionLabel' })}>
-      <Title><FormattedMessage id="results.title" /></Title>
+    <Container aria-label={intl.formatMessage({ id: "results.regionLabel" })}>
+      <Title>
+        <FormattedMessage id="results.title" />
+      </Title>
 
       <EstimatesGrid>
         {sortedGroups.map(([value, count]) => (

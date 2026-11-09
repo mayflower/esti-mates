@@ -1,13 +1,18 @@
 /// <reference types="@testing-library/jest-dom" />
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, beforeEach } from 'vitest';
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '../styles/theme';
-import { AppIntlProvider } from '../i18n';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ThemeProvider } from "styled-components";
+import { beforeEach, describe, expect, it } from "vitest";
+import { AppIntlProvider } from "../i18n";
+import { createTheme } from "../styles/theme";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const theme = createTheme({ brandName: "Test", brandLogoUrl: "/logo.svg", brandPrimaryColor: "#1a73e8", brandFooterText: "Test" });
+const theme = createTheme({
+  brandName: "Test",
+  brandLogoUrl: "/logo.svg",
+  brandPrimaryColor: "#1a73e8",
+  brandFooterText: "Test",
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -17,36 +22,36 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe('LanguageSwitcher', () => {
+describe("LanguageSwitcher", () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  it('should render DE and EN buttons', () => {
+  it("should render DE and EN buttons", () => {
     render(<LanguageSwitcher />, { wrapper: Wrapper });
 
-    expect(screen.getByRole('button', { name: /DE/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /EN/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /DE/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /EN/i })).toBeInTheDocument();
   });
 
-  it('should switch language when clicking a button', async () => {
+  it("should switch language when clicking a button", async () => {
     const user = userEvent.setup();
     render(<LanguageSwitcher />, { wrapper: Wrapper });
 
-    const enButton = screen.getByRole('button', { name: /EN/i });
+    const enButton = screen.getByRole("button", { name: /EN/i });
     await user.click(enButton);
 
-    expect(localStorage.getItem('locale')).toBe('en');
+    expect(localStorage.getItem("locale")).toBe("en");
   });
 
-  it('should highlight active language', () => {
-    localStorage.setItem('locale', 'en');
+  it("should highlight active language", () => {
+    localStorage.setItem("locale", "en");
     render(<LanguageSwitcher />, { wrapper: Wrapper });
 
-    const enButton = screen.getByRole('button', { name: /EN/i });
-    const deButton = screen.getByRole('button', { name: /DE/i });
+    const enButton = screen.getByRole("button", { name: /EN/i });
+    const deButton = screen.getByRole("button", { name: /DE/i });
 
-    expect(enButton).toHaveAttribute('data-active', 'true');
-    expect(deButton).toHaveAttribute('data-active', 'false');
+    expect(enButton).toHaveAttribute("data-active", "true");
+    expect(deButton).toHaveAttribute("data-active", "false");
   });
 });

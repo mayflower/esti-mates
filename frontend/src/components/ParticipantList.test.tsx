@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
 import { IntlProvider } from "react-intl";
 import { ThemeProvider } from "styled-components";
-import { ParticipantList } from "./ParticipantList";
-import type { EstimateValue, Participant } from "../types/types";
+import { describe, expect, it, vi } from "vitest";
 import messages from "../i18n/messages/en.json";
+import type { EstimateValue, Participant } from "../types/types";
+import { ParticipantList } from "./ParticipantList";
 
 const theme = {
   brandName: "Test Brand",

@@ -1,6 +1,6 @@
 // frontend/src/App.tsx
 import React from "react";
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { LandingPage } from "./components/LandingPage";
 import { BrandingProvider } from "./contexts/BrandingContext";
@@ -8,9 +8,9 @@ import { NotificationProvider } from "./contexts/NotificationContext";
 import { SessionProvider } from "./contexts/SessionContext";
 import { useSession } from "./contexts/SessionContext";
 import { useSocket } from "./hooks/useSocket";
-import { AppIntlProvider } from './i18n';
-import type { CardDeck } from "./types/types";
+import { AppIntlProvider } from "./i18n";
 import { SessionPage } from "./pages/SessionPage";
+import type { CardDeck } from "./types/types";
 
 function LandingPageWrapper() {
   const navigate = useNavigate();

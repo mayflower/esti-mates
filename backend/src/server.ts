@@ -75,15 +75,17 @@ io.on("connection", (socket) => {
   let currentSessionId: string | null = null;
 
   socket.on("create_session", (payload) => {
-    logger.info({ name: payload.name, cardDeck: payload.cardDeck }, `create_session from ${socket.id}`);
+    logger.info(
+      { name: payload.name, cardDeck: payload.cardDeck },
+      `create_session from ${socket.id}`
+    );
 
     if (!payload.name || payload.name.trim() === "") {
       socket.emit("error", { message: "Name is required" });
       return;
     }
 
-    const cardDeck: CardDeck =
-      payload.cardDeck === "tshirt" ? "tshirt" : "fibonacci";
+    const cardDeck: CardDeck = payload.cardDeck === "tshirt" ? "tshirt" : "fibonacci";
 
     const result = sessionService.createSession(socket.id, payload.name.trim(), cardDeck);
     currentSessionId = result.sessionId;

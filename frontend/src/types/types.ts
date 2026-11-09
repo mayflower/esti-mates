@@ -34,4 +34,3 @@ export interface Participant {
   isObserver: boolean;
   currentEstimate: EstimateValue | null;
 }
-
