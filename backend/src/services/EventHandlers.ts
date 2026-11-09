@@ -1,5 +1,5 @@
 import type { Server, Socket } from "socket.io";
-import type { EstimateValue } from "../types/types.js";
+import type { CardDeck, EstimateValue } from "../types/types.js";
 import type { SessionService } from "./SessionService.js";
 
 export class EventHandlers {
@@ -7,6 +7,60 @@ export class EventHandlers {
     private sessionService: SessionService,
     private io: Server
   ) {}
+
+  handleCreateSession(socket: Socket, payload: { name: string; cardDeck?: string }): string | null {
+    if (!payload.name || payload.name.trim() === "") {
+      socket.emit("error", { message: "Name is required" });
+      return null;
+    }
+
+    const cardDeck: CardDeck = payload.cardDeck === "tshirt" ? "tshirt" : "fibonacci";
+
+    const result = this.sessionService.createSession(socket.id, payload.name.trim(), cardDeck);
+
+    socket.join(result.sessionId);
+    socket.emit("session_created", {
+      sessionId: result.sessionId,
+      moderator: result.moderator,
+      cardDeck,
+    });
+
+    return result.sessionId;
+  }
+
+  handleJoinSession(socket: Socket, payload: { sessionId: string; name: string }): string | null {
+    if (!payload.name || payload.name.trim() === "") {
+      socket.emit("error", { message: "Name is required" });
+      return null;
+    }
+
+    const result = this.sessionService.joinSession(
+      payload.sessionId,
+      socket.id,
+      payload.name.trim()
+    );
+
+    if (!result.success) {
+      socket.emit("error", { message: result.error });
+      return null;
+    }
+
+    const session = this.sessionService.getSession(payload.sessionId);
+
+    socket.join(payload.sessionId);
+
+    socket.emit("joined_session", {
+      participants: result.participants,
+      isModerator: result.participant?.isModerator,
+      cardDeck: session?.cardDeck ?? "fibonacci",
+    });
+
+    socket.to(payload.sessionId).emit("participant_joined", {
+      participant: result.participant,
+    });
+
+    return payload.sessionId;
+  }
 
   handleSubmitEstimate(
     socket: Socket,
