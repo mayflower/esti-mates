@@ -152,7 +152,7 @@ export function SessionProvider({ children, socket }: Props) {
       socket.off("observer_toggled");
       socket.off("error");
     };
-  }, [socket]);
+  }, [socket, dialog]);
 
   // Actions
   const createSession = useCallback(

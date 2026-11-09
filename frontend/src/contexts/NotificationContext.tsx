@@ -1,9 +1,18 @@
-import { createContext, useContext, useState, useMemo, useCallback, useEffect, useRef, ReactNode } from 'react';
-import { ToastContainer } from '../components/ToastContainer';
-import { DialogContainer } from '../components/DialogContainer';
+import {
+  type ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { DialogContainer } from "../components/DialogContainer";
+import { ToastContainer } from "../components/ToastContainer";
 
 // Types
-export type ToastType = 'success' | 'error' | 'info';
+export type ToastType = "success" | "error" | "info";
 
 export interface Toast {
   id: string;
@@ -15,7 +24,7 @@ export interface Toast {
 export interface Dialog {
   title?: string;
   message: string;
-  type?: 'error' | 'info';
+  type?: "error" | "info";
   onClose?: () => void;
 }
 
@@ -40,7 +49,7 @@ const NotificationContext = createContext<NotificationContextValue | undefined>(
 export function useNotification() {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotification must be used within NotificationProvider');
+    throw new Error("useNotification must be used within NotificationProvider");
   }
   return context;
 }
@@ -57,7 +66,9 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   // Cleanup all timeouts on unmount
   useEffect(() => {
     return () => {
-      timeoutsRef.current.forEach(timeout => clearTimeout(timeout));
+      for (const timeout of timeoutsRef.current.values()) {
+        clearTimeout(timeout);
+      }
       timeoutsRef.current.clear();
     };
   }, []);
@@ -72,22 +83,25 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  const addToast = useCallback((message: string, type: ToastType, duration = 4000) => {
-    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-    const newToast: Toast = { id, message, type, duration };
+  const addToast = useCallback(
+    (message: string, type: ToastType, duration = 4000) => {
+      const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const newToast: Toast = { id, message, type, duration };
 
-    setToasts((prev) => {
-      const updated = [newToast, ...prev];
-      return updated.slice(0, 5); // Max 5 toasts
-    });
+      setToasts((prev) => {
+        const updated = [newToast, ...prev];
+        return updated.slice(0, 5); // Max 5 toasts
+      });
 
-    // Auto-remove after duration
-    const timeoutId = setTimeout(() => {
-      removeToast(id);
-    }, duration);
+      // Auto-remove after duration
+      const timeoutId = setTimeout(() => {
+        removeToast(id);
+      }, duration);
 
-    timeoutsRef.current.set(id, timeoutId);
-  }, [removeToast]);
+      timeoutsRef.current.set(id, timeoutId);
+    },
+    [removeToast]
+  );
 
   const showDialog = useCallback((dialog: Dialog) => {
     setCurrentDialog(dialog);
@@ -102,34 +116,43 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     });
   }, []);
 
-  const toast = useMemo(() => ({
-    success: (message: string, duration?: number) => addToast(message, 'success', duration),
-    error: (message: string, duration?: number) => addToast(message, 'error', duration),
-    info: (message: string, duration?: number) => addToast(message, 'info', duration),
-  }), [addToast]);
+  const toast = useMemo(
+    () => ({
+      success: (message: string, duration?: number) => addToast(message, "success", duration),
+      error: (message: string, duration?: number) => addToast(message, "error", duration),
+      info: (message: string, duration?: number) => addToast(message, "info", duration),
+    }),
+    [addToast]
+  );
 
-  const dialog = useMemo(() => ({
-    error: (message: string, options?: { title?: string; onClose?: () => void }) => {
-      showDialog({
-        message,
-        type: 'error',
-        title: options?.title || 'Error',
-        onClose: options?.onClose,
-      });
-    },
-    show: (options: Dialog) => {
-      showDialog(options);
-    },
-  }), [showDialog]);
+  const dialog = useMemo(
+    () => ({
+      error: (message: string, options?: { title?: string; onClose?: () => void }) => {
+        showDialog({
+          message,
+          type: "error",
+          title: options?.title || "Error",
+          onClose: options?.onClose,
+        });
+      },
+      show: (options: Dialog) => {
+        showDialog(options);
+      },
+    }),
+    [showDialog]
+  );
 
-  const value = useMemo<NotificationContextValue>(() => ({
-    toasts,
-    currentDialog,
-    toast,
-    dialog,
-    removeToast,
-    closeDialog,
-  }), [toasts, currentDialog, toast, dialog, removeToast, closeDialog]);
+  const value = useMemo<NotificationContextValue>(
+    () => ({
+      toasts,
+      currentDialog,
+      toast,
+      dialog,
+      removeToast,
+      closeDialog,
+    }),
+    [toasts, currentDialog, toast, dialog, removeToast, closeDialog]
+  );
 
   return (
     <NotificationContext.Provider value={value}>

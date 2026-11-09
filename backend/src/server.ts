@@ -6,7 +6,6 @@ import { Server } from "socket.io";
 import { logger } from "./logger.js";
 import { EventHandlers } from "./services/EventHandlers.js";
 import { SessionService } from "./services/SessionService.js";
-import type { CardDeck } from "./types/types.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -75,25 +74,12 @@ io.on("connection", (socket) => {
   let currentSessionId: string | null = null;
 
   socket.on("create_session", (payload) => {
-    logger.info({ name: payload.name, cardDeck: payload.cardDeck }, `create_session from ${socket.id}`);
+    logger.info(
+      { name: payload.name, cardDeck: payload.cardDeck },
+      `create_session from ${socket.id}`
+    );
 
-    if (!payload.name || payload.name.trim() === "") {
-      socket.emit("error", { message: "Name is required" });
-      return;
-    }
-
-    const cardDeck: CardDeck =
-      payload.cardDeck === "tshirt" ? "tshirt" : "fibonacci";
-
-    const result = sessionService.createSession(socket.id, payload.name.trim(), cardDeck);
-    currentSessionId = result.sessionId;
-
-    socket.join(result.sessionId);
-    socket.emit("session_created", {
-      sessionId: result.sessionId,
-      moderator: result.moderator,
-      cardDeck,
-    });
+    currentSessionId = eventHandlers.handleCreateSession(socket, payload) ?? currentSessionId;
   });
 
   socket.on("join_session", (payload) => {
@@ -102,32 +88,7 @@ io.on("connection", (socket) => {
       `join_session from ${socket.id}`
     );
 
-    if (!payload.name || payload.name.trim() === "") {
-      socket.emit("error", { message: "Name is required" });
-      return;
-    }
-
-    const result = sessionService.joinSession(payload.sessionId, socket.id, payload.name.trim());
-
-    if (!result.success) {
-      socket.emit("error", { message: result.error });
-      return;
-    }
-
-    const session = sessionService.getSession(payload.sessionId);
-
-    currentSessionId = payload.sessionId;
-    socket.join(payload.sessionId);
-
-    socket.emit("joined_session", {
-      participants: result.participants,
-      isModerator: result.participant?.isModerator,
-      cardDeck: session?.cardDeck ?? "fibonacci",
-    });
-
-    socket.to(payload.sessionId).emit("participant_joined", {
-      participant: result.participant,
-    });
+    currentSessionId = eventHandlers.handleJoinSession(socket, payload) ?? currentSessionId;
   });
 
   socket.on("submit_estimate", (payload) => {

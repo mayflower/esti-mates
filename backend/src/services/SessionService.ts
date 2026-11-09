@@ -57,7 +57,12 @@ export class SessionService {
     socketId: string,
     name: string
   ):
-    | { success: true; participant: Participant; participants: Participant[]; replacedStaleParticipant?: boolean }
+    | {
+        success: true;
+        participant: Participant;
+        participants: Participant[];
+        replacedStaleParticipant?: boolean;
+      }
     | { success: false; error: string } {
     if (!sessionId?.trim()) {
       return { success: false, error: "Invalid session ID" };

@@ -1,12 +1,12 @@
 // frontend/src/components/LandingPage.tsx
 import { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FormattedMessage, useIntl } from "react-intl";
 import { useBranding } from "../contexts/BrandingContext";
 import { useNotification } from "../contexts/NotificationContext";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import type { CardDeck } from "../types/types";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const Container = styled.main`
   position: relative;
@@ -208,11 +208,15 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
         <LanguageSwitcher />
       </LanguageSwitcherWrapper>
       {branding.brandLogoUrl && <Logo src={branding.brandLogoUrl} alt={branding.brandName} />}
-      <Title><FormattedMessage id="landing.title" /></Title>
+      <Title>
+        <FormattedMessage id="landing.title" />
+      </Title>
 
       {/* Form 1: Create New Session */}
       <Card>
-        <SectionTitle><FormattedMessage id="landing.createSession" /></SectionTitle>
+        <SectionTitle>
+          <FormattedMessage id="landing.createSession" />
+        </SectionTitle>
         <Input
           type="text"
           placeholder={intl.formatMessage({ id: "landing.yourName" })}
@@ -240,14 +244,20 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
             <FormattedMessage id="landing.deckTshirt" />
           </DeckButton>
         </DeckSelector>
-        <Button onClick={handleCreate}><FormattedMessage id="landing.createButton" /></Button>
+        <Button onClick={handleCreate}>
+          <FormattedMessage id="landing.createButton" />
+        </Button>
       </Card>
 
-      <Divider><FormattedMessage id="landing.or" /></Divider>
+      <Divider>
+        <FormattedMessage id="landing.or" />
+      </Divider>
 
       {/* Form 2: Join Existing Session */}
       <Card>
-        <SectionTitle><FormattedMessage id="landing.joinSession" /></SectionTitle>
+        <SectionTitle>
+          <FormattedMessage id="landing.joinSession" />
+        </SectionTitle>
         <Input
           type="text"
           placeholder={intl.formatMessage({ id: "landing.sessionIdPlaceholder" })}
@@ -256,7 +266,9 @@ export function LandingPage({ onCreateSession }: LandingPageProps) {
           onKeyPress={(e) => e.key === "Enter" && handleJoin()}
           maxLength={6}
         />
-        <Button onClick={handleJoin}><FormattedMessage id="landing.joinButton" /></Button>
+        <Button onClick={handleJoin}>
+          <FormattedMessage id="landing.joinButton" />
+        </Button>
       </Card>
 
       <Footer>{branding.brandFooterText}</Footer>
