@@ -1,5 +1,5 @@
 # Stage 1: Build frontend
-FROM node:20-slim AS frontend-builder
+FROM node:26-slim AS frontend-builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY frontend ./frontend
 RUN npm run build --workspace=frontend
 
 # Stage 2: Build backend
-FROM node:20-slim AS backend-builder
+FROM node:26-slim AS backend-builder
 
 WORKDIR /app
 
@@ -28,14 +28,14 @@ COPY biome.json ./
 RUN npm run build --workspace=backend
 
 # Stage 3: Production image
-FROM node:20-slim
+FROM node:26-slim
 
 WORKDIR /app
 
 COPY package*.json ./
 COPY backend/package*.json ./backend/
 
-RUN npm ci --workspace=backend --production
+RUN npm ci --workspace=backend --omit=dev
 
 COPY --from=backend-builder /app/backend/dist ./backend/dist
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
